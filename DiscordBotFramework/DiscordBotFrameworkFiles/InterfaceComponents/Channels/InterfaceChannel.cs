@@ -41,4 +41,5 @@ public interface InterfaceChannel
     public Task<string> DeleteMessagesInAChannelWithMessageName(MessageName _messageNameToDelete);
     public Task DeleteThisChannel(
         InterfaceCategory _interfaceCategory, InterfaceChannel _interfaceChannel, string _nameMustContain);
+    public bool CheckIfChannelHasBeenDeletedAndRestoreForCategory(ulong _categoryId);
 }

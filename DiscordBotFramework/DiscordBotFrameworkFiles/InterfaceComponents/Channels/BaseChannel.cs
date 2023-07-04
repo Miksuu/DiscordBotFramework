@@ -342,7 +342,7 @@ public abstract class BaseChannel : InterfaceChannel
             interfaceMessageValues.Add(message.Value);
         }
 
-        Log.WriteLine("returning messages with count: " + interfaceMessageValues.Count); 
+        Log.WriteLine("returning messages with count: " + interfaceMessageValues.Count);
 
         return interfaceMessageValues;
     }
@@ -389,7 +389,7 @@ public abstract class BaseChannel : InterfaceChannel
                     Log.WriteLine("Deleted the message: " + message.Id +
                         " deleting it from DB count: " + thisInterfaceChannel.InterfaceMessagesWithIds.Count);
                 }
-                catch (Exception ex) 
+                catch (Exception ex)
                 {
                     Log.WriteLine(ex.Message, LogLevel.CRITICAL);
                     continue;
@@ -411,7 +411,7 @@ public abstract class BaseChannel : InterfaceChannel
             Log.WriteLine(ex.Message, LogLevel.CRITICAL);
             return ex.Message;
         }
-        
+
         return "";
     }
 
@@ -448,5 +448,38 @@ public abstract class BaseChannel : InterfaceChannel
                 channelId, out InterfaceChannel? _ic);
 
         Log.WriteLine("Deleted channel: " + _ic.ChannelName + " from the database.", LogLevel.DEBUG);
+    }
+
+    // Temp, perhaps remove _categoryId cuz it might be inside _interfaceChannel
+    public bool CheckIfChannelHasBeenDeletedAndRestoreForCategory(ulong _categoryId)
+    {
+        try
+        {
+            Log.WriteLine("Checking if channel in " + _categoryId +
+                " has been deleted. Trying to find: " + thisInterfaceChannel.ChannelId, LogLevel.DEBUG);
+
+            var guild = BotReference.GetGuildRef();
+            if (guild.GetCategoryChannel(_categoryId).Channels.Any(
+                x => x.Id == thisInterfaceChannel.ChannelId))
+            {
+                Log.WriteLine("Channel " + thisInterfaceChannel.ChannelId + " in: " +
+                    _categoryId + " found, returning.");
+                return true;
+            }
+
+            var category = Database.Instance.Categories.FindInterfaceCategoryWithCategoryId(_categoryId);
+            var channel = category.FindInterfaceChannelWithIdInTheCategory(thisInterfaceChannel.ChannelId);
+            category.InterfaceChannels.TryRemove(channel.ChannelId, out InterfaceChannel? _ic);
+
+            Log.WriteLine("Channel " + thisInterfaceChannel.ChannelType +
+                " not found, regenerating it...", LogLevel.ERROR);
+
+            return false;
+        }
+        catch (Exception ex)
+        {
+            Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+            throw new InvalidOperationException(ex.Message);
+        }
     }
 }
