@@ -337,4 +337,36 @@ public abstract class BaseCategory : InterfaceCategory
         Log.WriteLine("Found: " + interfaceChannel.ChannelName);
         return interfaceChannel;
     }
+
+    // Temp, remove the param here later
+    public bool CheckIfCategoryHasBeenDeletedAndRestoreForCategory(ulong _categoryKey)
+    {
+        try
+        {
+            Log.WriteLine("Checking if categoryId: " + _categoryKey +
+                " has been deleted.", LogLevel.DEBUG);
+
+            var guild = BotReference.GetGuildRef();
+
+            if (guild.CategoryChannels.Any(x => x.Id == _categoryKey))
+            {
+                Log.WriteLine("Category " + _categoryKey + " found, returning.", LogLevel.DEBUG);
+                return true;
+            }
+
+            Log.WriteLine("Category " + _categoryKey +
+                " not found, regenerating it...", LogLevel.DEBUG);
+
+            // Delete the old entry from the database
+            //Database.Instance.Categories.RemoveFromCreatedCategoryWithChannelWithKey(
+            //    _categoryKey);
+
+            return false;
+        }
+        catch (Exception ex)
+        {
+            Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+            throw new InvalidOperationException(ex.Message);
+        }
+    }
 }

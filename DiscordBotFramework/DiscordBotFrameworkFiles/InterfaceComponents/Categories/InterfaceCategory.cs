@@ -25,4 +25,5 @@ public interface InterfaceCategory
     public bool FindIfInterfaceChannelExistsWithIdInTheCategory(ulong _idToSearchWith);
     public InterfaceChannel FindInterfaceChannelWithIdInTheCategory(ulong _idToSearchWith);
     public InterfaceChannel FindInterfaceChannelWithNameInTheCategory(ChannelType _nameToSearchWith);
+    public bool CheckIfCategoryHasBeenDeletedAndRestoreForCategory(ulong _categoryKey);
 }

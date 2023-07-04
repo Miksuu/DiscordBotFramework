@@ -83,7 +83,7 @@ public static class CategoryAndChannelManager
                 if (categoryKvp.Value.CategoryType == _categoryType)
                 {
                     Log.WriteLine("Equals: " + _categoryType);
-                    if (CategoryRestore.CheckIfCategoryHasBeenDeletedAndRestoreForCategory(categoryKvp.Key))
+                    if (categoryKvp.Value.CheckIfCategoryHasBeenDeletedAndRestoreForCategory(categoryKvp.Key))
                     {
                         Log.WriteLine("Found: " + categoryKvp.Key + " | " + categoryKvp.Value.CategoryType, LogLevel.DEBUG);
                         return true;
