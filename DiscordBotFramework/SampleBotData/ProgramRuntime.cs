@@ -61,7 +61,7 @@ public class ProgramRuntime
 
         //await SetupEventScheduler();
 
-        await SerializationManager.SerializeUsersOnTheServer();
+        //await SerializationManager.SerializeUsersOnTheServer();
         await SerializationManager.SerializeDB();
 
         SetupListeners();

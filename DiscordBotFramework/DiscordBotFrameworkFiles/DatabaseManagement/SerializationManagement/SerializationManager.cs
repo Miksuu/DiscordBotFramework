@@ -9,17 +9,12 @@ public static class SerializationManager
     static string dbTempPathWithFileName = Database.dbPath + @"\" + dbTempFileName;
     static SemaphoreSlim semaphore = new SemaphoreSlim(1);
 
-    public static async Task SerializeDB(bool _circularDependency = false)
+    public static async Task SerializeDB()
     {
         await semaphore.WaitAsync();
         try
         {
             Log.WriteLine("SERIALIZING DB", LogLevel.SERIALIZATION);
-
-            if (!_circularDependency)
-            {
-                await SerializeUsersOnTheServer();
-            }
 
             Newtonsoft.Json.JsonSerializer serializer = new Newtonsoft.Json.JsonSerializer();
             serializer.Converters.Add(new Newtonsoft.Json.Converters.JavaScriptDateTimeConverter());
@@ -53,39 +48,6 @@ public static class SerializationManager
             var properties = base.CreateProperties(type, memberSerialization);
             return properties.Where(p => p.AttributeProvider.GetAttributes(typeof(DataMemberAttribute), true).Any()).ToList();
         }
-    }
-
-    public static Task SerializeUsersOnTheServer()
-    {
-        Log.WriteLine("Serializing users on the server", LogLevel.SERIALIZATION);
-
-        var guild = BotReference.GetGuildRef();
-
-        foreach (SocketGuildUser user in guild.Users)
-        {
-            if (user == null)
-            {
-                Log.WriteLine("User was null!", LogLevel.ERROR);
-            }
-            else
-            {
-                // Move to method
-                string userString = user.Username + " (" + user.Id + ")";
-                Log.WriteLine("Looping on: " + userString);
-
-                if (!user.IsBot)
-                {
-                    Database.Instance.CachedUsers.AddUserIdToCachedConcurrentBag(user.Id);
-                }
-                else
-                {
-                    Log.WriteLine(userString + " is a bot, disregarding.");
-                }
-            }
-        }
-        Log.WriteLine("Done looping through current users.");
-
-        return Task.CompletedTask;
     }
 
     public static Task DeSerializeDB()

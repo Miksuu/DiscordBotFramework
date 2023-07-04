@@ -35,7 +35,6 @@ public class Database
 
     // The Database components
     [DataMember] public Admins Admins = new Admins();
-    [DataMember] public CachedUsers CachedUsers = new CachedUsers();
     [DataMember] public Categories Categories = new Categories();
     [DataMember] public EventScheduler EventScheduler = new EventScheduler();
 }
