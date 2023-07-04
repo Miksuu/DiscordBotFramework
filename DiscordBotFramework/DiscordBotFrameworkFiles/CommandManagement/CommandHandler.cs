@@ -87,8 +87,6 @@ public static class CommandHandler
         Log.WriteLine(nameof(commandEnumValues) +
             " length: " + commandEnumValues.Length);
 
-        var client = BotReference.GetClientRef();
-
         foreach (CommandName commandName in commandEnumValues)
         {
             Log.WriteLine("Looping on cmd" + nameof(commandName));
@@ -107,23 +105,6 @@ public static class CommandHandler
             }
         }
 
-        /*
-        // Command for showing a test gif
-        AddNewCommand("cats", "Prints a cute cat!");
-
-        AddNewCommandWithOption("register",
-            "registers an user profile manually",
-            "userid",
-            "what discord ID do you want to register?"
-            );
-
-        // Command for eliminating a player's profile
-        AddNewCommandWithOption("terminate",
-            "deletes a player profile, completely",
-            "userid",
-            "which user do you want to terminate?"
-            );
-        */
         Log.WriteLine("Done preparing the commands.");
 
         return;

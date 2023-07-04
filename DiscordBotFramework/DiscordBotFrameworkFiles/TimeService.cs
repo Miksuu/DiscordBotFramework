@@ -30,13 +30,6 @@ public static class TimeService
         return unixTime;
     }
 
-    //public static string ConvertDateTimeToZuluTime(DateTime dateTime)
-    //{
-    //    ulong unixTime = ConvertDateTimeToUnixTime(dateTime);
-    //    string zuluTime = ConvertToZuluTimeFromUnixTime(unixTime);
-    //    return zuluTime;
-    //}
-
     public static string ReturnTimeLeftAsStringFromTheTimeTheActionWillTakePlace(ulong _time)
     {
         var timeLeft = CalculateTimeUntilWithUnixTime(_time);

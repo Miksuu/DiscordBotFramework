@@ -5,17 +5,16 @@ using System.Data;
 // Reference to the bot's client/guild reference variable
 public class BotReference
 {
-    private static BotReference instance;
-    private static readonly object lockObject = new object();
-
     public bool ConnectionState
     {
         get => connectionState.GetValue();
         set => connectionState.SetValue(value);
     }
 
-    private static DiscordSocketClient clientRef;
-    private static SocketGuild guildRef;
+    private static BotReference? instance;
+    private static readonly object lockObject = new object();
+    private static DiscordSocketClient? clientRef;
+    private static SocketGuild? guildRef;
     private logVar<bool> connectionState = new logVar<bool>();
 
     private BotReference() { }
@@ -30,6 +29,7 @@ public class BotReference
                 {
                     if (instance == null)
                     {
+                        Log.WriteLine("Creating a new instance for " + nameof(BotReference), LogLevel.DEBUG);
                         instance = new BotReference();
                     }
                 }

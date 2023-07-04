@@ -47,37 +47,34 @@ public abstract class BaseCategory : InterfaceCategory
 
     public abstract List<Overwrite> GetGuildPermissions(SocketRole _role);
 
-    public async Task<SocketCategoryChannel> CreateANewSocketCategoryChannelAndReturnIt(string _categoryName, SocketRole _role)
+    public async Task<ulong> CreateANewSocketCategoryChannelAndReturnItAsId(string _categoryName, SocketRole _role)
     {
-        Log.WriteLine("Starting to create a new category with name: " +
-            _categoryName);
-
-        var guild = BotReference.GetGuildRef();
-
-        RestCategoryChannel newCategory = await guild.CreateCategoryChannelAsync(
-            _categoryName, x => x.PermissionOverwrites = GetGuildPermissions(_role));
-        if (newCategory == null)
+        try
         {
-            Log.WriteLine(nameof(newCategory) + " was null!", LogLevel.CRITICAL);
-            throw new InvalidOperationException(nameof(newCategory) + " was null!");
+            Log.WriteLine("Starting to create a new category with name: " +
+                _categoryName, LogLevel.DEBUG);
+
+            var guild = BotReference.GetGuildRef();
+
+            RestCategoryChannel newCategory = await guild.CreateCategoryChannelAsync(
+                _categoryName, x => x.PermissionOverwrites = GetGuildPermissions(_role));
+            Log.WriteLine("Created a new RestCategoryChannel with ID: " +
+                newCategory.Id);
+
+            ulong socketCategoryChannelId =
+                guild.GetCategoryChannel(newCategory.Id).Id;
+
+            Log.WriteLine("Created a new socketCategoryChannel :" +
+                socketCategoryChannelId + " returning it", LogLevel.DEBUG);
+
+            return socketCategoryChannelId;
+        }
+        catch (Exception ex)
+        {
+            Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+            throw new InvalidOperationException(ex.Message);
         }
 
-        Log.WriteLine("Created a new RestCategoryChannel with ID: " +
-            newCategory.Id);
-
-        SocketCategoryChannel socketCategoryChannel =
-            guild.GetCategoryChannel(newCategory.Id);
-        if (socketCategoryChannel == null)
-        {
-            Log.WriteLine(nameof(socketCategoryChannel) + " was null!", LogLevel.CRITICAL);
-            throw new InvalidOperationException(nameof(newCategory) + " was null!");
-        }
-
-        Log.WriteLine("Created a new socketCategoryChannel :" +
-            socketCategoryChannel.Id.ToString() +" named: " +
-            socketCategoryChannel.Name, LogLevel.DEBUG);
-
-        return socketCategoryChannel;
     }
 
     public async Task CreateChannelsForTheCategory(

@@ -13,7 +13,7 @@ public interface InterfaceCategory
 
     public abstract List<Overwrite> GetGuildPermissions(SocketRole _role);
 
-    public Task<SocketCategoryChannel> CreateANewSocketCategoryChannelAndReturnIt(
+    public Task<ulong> CreateANewSocketCategoryChannelAndReturnItAsId(
         string _categoryName, SocketRole _role);
     public Task CreateChannelsForTheCategory(
         ulong _socketCategoryChannelId, SocketRole _role);

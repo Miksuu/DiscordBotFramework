@@ -1,131 +1,154 @@
 using Discord;
 using Discord.WebSocket;
+using System.ComponentModel;
+using System.Data;
+using System.Reflection.Metadata.Ecma335;
 
 public static class CategoryAndChannelManager
 {
     public static async Task CreateCategoriesAndChannelsForTheDiscordServer()
     {
-        Log.WriteLine("Starting to create categories and channels for the discord server");
+        Log.WriteLine("Starting to create categories and channels for the discord server", LogLevel.DEBUG);
 
         await GenerateRegularCategories();
 
-        Log.WriteLine("Done looping through the category names.");
+        Log.WriteLine("Done looping through all the category names.", LogLevel.DEBUG);
     }
 
     private static async Task GenerateRegularCategories()
     {
+        Log.WriteLine("Starting to generate RegularCategories", LogLevel.DEBUG);
+
         foreach (CategoryType categoryName in Enum.GetValues(typeof(CategoryType)))
         {
-            Log.WriteLine("Looping on category name: " + categoryName);
-
-            await GenerateCategory(categoryName, categoryName);
+            try
+            {
+                Log.WriteLine("Looping on category name: " + categoryName);
+                await GenerateCategory(categoryName, categoryName);
+            }
+            catch (Exception ex)
+            {
+                Log.WriteLine(ex.Message);
+                continue;
+            }
         }
+
+        Log.WriteLine("Done generating RegularCategories", LogLevel.DEBUG);
     }
 
     private static async Task GenerateCategory(CategoryType _categoryType, Enum _categoryName)
     {
         try
         {
-            Log.WriteLine("Generating category named: " + _categoryType);
+            Log.WriteLine("Generating category named: " + _categoryType + " with enum: " + _categoryName, LogLevel.DEBUG);
 
             InterfaceCategory interfaceCategory = GetCategoryInstance(_categoryType);
-            if (interfaceCategory == null)
-            {
-                Log.WriteLine(nameof(interfaceCategory).ToString() + " was null!", LogLevel.CRITICAL);
-                return;
-            }
 
             Log.WriteLine("interfaceCategory name: " + interfaceCategory.CategoryType, LogLevel.DEBUG);
 
             string finalCategoryName = EnumExtensions.GetEnumMemberAttrValue(_categoryName);
-            Log.WriteLine("Category name is: " + interfaceCategory.CategoryType);
+            Log.WriteLine("Category name is: " + finalCategoryName);
 
-            SocketCategoryChannel? socketCategoryChannel = FindOrCreateSocketCategoryChannel(interfaceCategory, finalCategoryName);
-            if (socketCategoryChannel == null)
+            ulong socketCategoryChannelId = await FindOrCreateSocketCategoryChannelAndReturnId(interfaceCategory, finalCategoryName);
+
+            Log.WriteLine("id: " + socketCategoryChannelId);
+
+            SocketRole role = await RoleManager.CheckIfRoleExistsByNameAndCreateItIfItDoesntElseReturnIt(finalCategoryName);
+
+            if (Database.Instance.Categories.FindIfInterfaceCategoryExistsWithCategoryId(socketCategoryChannelId))
             {
-                Log.WriteLine(nameof(socketCategoryChannel).ToString() + " was null!", LogLevel.CRITICAL);
-                return;
+                interfaceCategory = Database.Instance.Categories.FindInterfaceCategoryWithCategoryId(socketCategoryChannelId);
             }
 
-            SocketRole? role = await RoleManager.CheckIfRoleExistsByNameAndCreateItIfItDoesntElseReturnIt(finalCategoryName);
-            if (role == null)
-            {
-                Log.WriteLine(nameof(role).ToString() + " was null!", LogLevel.CRITICAL);
-                return;
-            }
+            await interfaceCategory.CreateChannelsForTheCategory(socketCategoryChannelId, role);
 
-            if (Database.Instance.Categories.FindIfInterfaceCategoryExistsWithCategoryId(socketCategoryChannel.Id))
-            {
-                interfaceCategory = Database.Instance.Categories.FindInterfaceCategoryWithCategoryId(socketCategoryChannel.Id);
-            }
-
-            await interfaceCategory.CreateChannelsForTheCategory(socketCategoryChannel.Id, role);
+            Log.WriteLine("Done with generating category: " + _categoryType + " with enum: " + _categoryName, LogLevel.DEBUG);
         }
         catch (Exception ex)
         {
             Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+            throw new InvalidOperationException(ex.Message);
         }
     }
 
-    private static SocketCategoryChannel? FindOrCreateSocketCategoryChannel(InterfaceCategory _interfaceCategory, string _finalCategoryName)
+    private static bool FindCategoryAndCheckIfItHasBeenDeletedAndRestoreForCategory(CategoryType _categoryType)
     {
-        bool contains = false;
+        Log.WriteLine("Looking for: " + _categoryType, LogLevel.DEBUG);
 
-        foreach (var ct in Database.Instance.Categories.CreatedCategoriesWithChannels)
+        foreach (var categoryKvp in Database.Instance.Categories.CreatedCategoriesWithChannels)
         {
-            if (ct.Value.CategoryType == _interfaceCategory.CategoryType)
+            try
             {
-                contains = CategoryRestore.CheckIfCategoryHasBeenDeletedAndRestoreForCategory(ct.Key);
-                if (contains)
+                if (categoryKvp.Value.CategoryType == _categoryType)
                 {
-                    break;
+                    Log.WriteLine("Equals: " + _categoryType);
+                    if (CategoryRestore.CheckIfCategoryHasBeenDeletedAndRestoreForCategory(categoryKvp.Key))
+                    {
+                        Log.WriteLine("Found: " + categoryKvp.Key + " | " + categoryKvp.Value.CategoryType, LogLevel.DEBUG);
+                        return true;
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+                continue;
+            }
         }
 
-        if (contains)
+        Log.WriteLine("Didn't find: " + _categoryType, LogLevel.DEBUG);
+
+        return false;
+    }
+
+    private async static Task<ulong> FindOrCreateSocketCategoryChannelAndReturnId(InterfaceCategory _interfaceCategory, string _finalCategoryName)
+    {
+        try
         {
-            InterfaceCategory? dbCategory = Database.Instance.Categories.FindInterfaceCategoryByCategoryName(_interfaceCategory.CategoryType);
-            if (dbCategory == null)
-            {
-                Log.WriteLine(nameof(dbCategory).ToString() + " was null!", LogLevel.CRITICAL);
-                return null;
-            }
+            Log.WriteLine("Finding with: " + _interfaceCategory + "| final name:" + _finalCategoryName, LogLevel.DEBUG);
 
-            var guild = BotReference.GetGuildRef();
-            SocketCategoryChannel? socketCategoryChannel = guild.GetCategoryChannel(dbCategory.SocketCategoryChannelId);
-            if (socketCategoryChannel == null)
+            if (FindCategoryAndCheckIfItHasBeenDeletedAndRestoreForCategory(_interfaceCategory.CategoryType))
             {
-                Log.WriteLine(nameof(socketCategoryChannel).ToString() + " was null!", LogLevel.CRITICAL);
-                return null;
-            }
+                Log.WriteLine("True with: " + _interfaceCategory.CategoryType);
 
-            return socketCategoryChannel;
+                InterfaceCategory dbCategory = Database.Instance.Categories.FindInterfaceCategoryByCategoryName(_interfaceCategory.CategoryType);
+
+                Log.WriteLine("Found dbCategory: " + dbCategory.CategoryType);
+
+                var guild = BotReference.GetGuildRef();
+                ulong socketCategoryChannelId = guild.GetCategoryChannel(dbCategory.SocketCategoryChannelId).Id;
+                Log.WriteLine("returning found id: " + socketCategoryChannelId, LogLevel.DEBUG);
+                return socketCategoryChannelId;
+            }
+            else
+            {
+                Log.WriteLine("false with: " + _interfaceCategory.CategoryType);
+
+                SocketRole role = await RoleManager.CheckIfRoleExistsByNameAndCreateItIfItDoesntElseReturnIt(_finalCategoryName);
+
+                Log.WriteLine("Role: " + role.Id + " | name: " + role.Name);
+
+                var socketCategoryChannelId =
+                    await _interfaceCategory.CreateANewSocketCategoryChannelAndReturnItAsId(_finalCategoryName, role);
+
+                Log.WriteLine("found id: " + socketCategoryChannelId);
+
+                Database.Instance.Categories.AddToCreatedCategoryWithChannelWithUlongAndInterfaceCategory(socketCategoryChannelId, _interfaceCategory);
+
+                Log.WriteLine("Added, returning found id: " + socketCategoryChannelId, LogLevel.DEBUG);
+                return socketCategoryChannelId;
+            }
         }
-        else
+        catch (Exception ex) 
         {
-            SocketRole? role = RoleManager.CheckIfRoleExistsByNameAndCreateItIfItDoesntElseReturnIt(_finalCategoryName).Result;
-            if (role == null)
-            {
-                Log.WriteLine(nameof(role).ToString() + " was null!", LogLevel.CRITICAL);
-                return null;
-            }
-
-            SocketCategoryChannel? socketCategoryChannel =
-                _interfaceCategory.CreateANewSocketCategoryChannelAndReturnIt(_finalCategoryName, role).Result;
-            if (socketCategoryChannel == null)
-            {
-                Log.WriteLine(nameof(socketCategoryChannel).ToString() + " was null!", LogLevel.CRITICAL);
-                return null;
-            }
-
-            Database.Instance.Categories.AddToCreatedCategoryWithChannelWithUlongAndInterfaceCategory(socketCategoryChannel.Id, _interfaceCategory);
-            return socketCategoryChannel;
+            Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+            throw new InvalidOperationException(ex.Message);
         }
     }
 
-    private static InterfaceCategory? GetCategoryInstance(CategoryType _categoryType)
+    private static InterfaceCategory GetCategoryInstance(CategoryType _categoryType)
     {
+        Log.WriteLine("Getting instance: " + _categoryType, LogLevel.DEBUG);
         try
         {
             return (InterfaceCategory)EnumExtensions.GetInstance(_categoryType.ToString());
