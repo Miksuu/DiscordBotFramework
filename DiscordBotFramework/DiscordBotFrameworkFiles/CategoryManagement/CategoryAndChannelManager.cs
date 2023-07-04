@@ -79,6 +79,7 @@ public static class CategoryAndChannelManager
         {
             try
             {
+                Log.WriteLine("Looping on: " + categoryKvp.Key + " | " + categoryKvp.Value.CategoryType);
                 if (categoryKvp.Value.CategoryType == _categoryType)
                 {
                     Log.WriteLine("Equals: " + _categoryType);
@@ -88,6 +89,7 @@ public static class CategoryAndChannelManager
                         return true;
                     }
                 }
+                Log.WriteLine("Did not find with: " + categoryKvp.Key + " | " + categoryKvp.Value.CategoryType);
             }
             catch (Exception ex)
             {
