@@ -38,7 +38,7 @@ public class ProgramRuntime
                 // ONLY FOR TESTING, DELETES ALL CHANNELS AND CATEGORIES
                 // !!!
 
-                SetupProgramListenersAndSchedulers();
+                await SetupProgramListenersAndSchedulers();
             }
             else
             {
@@ -46,12 +46,11 @@ public class ProgramRuntime
             }
         };
 
-
         // Block this task until the program is closed.
         await Task.Delay(-1);
     }
 
-    private async void SetupProgramListenersAndSchedulers()
+    private async Task SetupProgramListenersAndSchedulers()
     {
         // Creates the categories and the channels from the interfaces
         // (dependant on the data from CreateLeaguesOnStartupIfNecessary())
@@ -60,14 +59,19 @@ public class ProgramRuntime
         // Creates the league references to the database
         //await LeagueManager.CreateLeaguesOnStartupIfNecessary();
 
-        SetupListeners();
-
-        await Database.Instance.EventScheduler.CheckCurrentTimeAndExecuteScheduledEvents(true);
+        //await SetupEventScheduler();
 
         await SerializationManager.SerializeUsersOnTheServer();
         await SerializationManager.SerializeDB();
 
+        SetupListeners();
+
         await CommandHandler.InstallCommandsAsync();
+    }
+
+    private async Task SetupEventScheduler()
+    {
+        await Database.Instance.EventScheduler.CheckCurrentTimeAndExecuteScheduledEvents(true);
 
         Thread secondThread = new Thread(Database.Instance.EventScheduler.EventSchedulerLoop);
         secondThread.Start();
