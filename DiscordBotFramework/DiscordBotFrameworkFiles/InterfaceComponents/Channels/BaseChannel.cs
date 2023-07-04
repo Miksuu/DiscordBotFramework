@@ -58,11 +58,9 @@ public abstract class BaseChannel : InterfaceChannel
         thisInterfaceChannel = this;
     }
 
-    public abstract List<Overwrite> GetGuildPermissions(
-        SocketGuild _guild, SocketRole _role, params ulong[] _allowedUsersIdsArray);
+    public abstract List<Overwrite> GetGuildPermissions(SocketRole _role, params ulong[] _allowedUsersIdsArray);
 
-    public async Task CreateAChannelForTheCategory(SocketGuild _guild, SocketRole _role,
-         params ulong[] _allowedUsersIdsArray)
+    public async Task CreateAChannelForTheCategory(SocketRole _role, ulong _channelCategoryId, params ulong[] _allowedUsersIdsArray)
     {
         Log.WriteLine("Creating a channel named: " + thisInterfaceChannel.ChannelType +
             " for category: " + thisInterfaceChannel.ChannelsCategoryId);
@@ -82,22 +80,22 @@ public abstract class BaseChannel : InterfaceChannel
             channelTypeString = thisInterfaceChannel.ChannelName;
         }
 
-        var client = BotReference.GetClientRef();
+        var guild = BotReference.GetGuildRef();
 
-        var channel = await _guild.CreateTextChannelAsync(channelTypeString, x =>
+        var channel = await guild.CreateTextChannelAsync(channelTypeString, x =>
         {
-            x.PermissionOverwrites = GetGuildPermissions(_guild, _role, _allowedUsersIdsArray);
-            x.CategoryId = thisInterfaceChannel.ChannelsCategoryId;
+            x.PermissionOverwrites = GetGuildPermissions(_role, _allowedUsersIdsArray);
+            x.CategoryId = _channelCategoryId;
         });
 
+        thisInterfaceChannel.ChannelsCategoryId = _channelCategoryId;
         thisInterfaceChannel.ChannelId = channel.Id;
 
         Log.WriteLine("Done creating a channel named: " + thisInterfaceChannel.ChannelType + " with ID: " + channel.Id +
             " for category: " + thisInterfaceChannel.ChannelsCategoryId, LogLevel.DEBUG);
     }
 
-    public async Task CreateAChannelForTheCategoryWithoutRole(
-        SocketGuild _guild, params ulong[] _allowedUsersIdsArray)
+    public async Task CreateAChannelForTheCategoryWithoutRole(params ulong[] _allowedUsersIdsArray)
     {
         Log.WriteLine("Creating a channel named: " + thisInterfaceChannel.ChannelType +
             " for category: " + thisInterfaceChannel.ChannelsCategoryId);
@@ -117,11 +115,10 @@ public abstract class BaseChannel : InterfaceChannel
             channelTypeString = thisInterfaceChannel.ChannelName;
         }
 
-        var client = BotReference.GetClientRef();
-
-        var channel = await _guild.CreateTextChannelAsync(channelTypeString, x =>
+        var guild = BotReference.GetGuildRef();
+        var channel = await guild.CreateTextChannelAsync(channelTypeString, x =>
         {
-            x.PermissionOverwrites = GetGuildPermissions(_guild, null, _allowedUsersIdsArray);
+            x.PermissionOverwrites = GetGuildPermissions(null, _allowedUsersIdsArray);
             x.CategoryId = thisInterfaceChannel.ChannelsCategoryId;
         });
 
@@ -140,10 +137,8 @@ public abstract class BaseChannel : InterfaceChannel
         InterfaceMessage interfaceMessage =
             (InterfaceMessage)EnumExtensions.GetInstance(_MessageName.ToString());
 
-        var client = BotReference.GetClientRef();
-
         InterfaceMessage newInterfaceMessage = await interfaceMessage.CreateTheMessageAndItsButtonsOnTheBaseClass(
-            client, this, true, _displayMessage, 0, _component, _ephemeral);
+            this, true, _displayMessage, 0, _component, _ephemeral);
 
         return newInterfaceMessage;
     }
@@ -166,12 +161,10 @@ public abstract class BaseChannel : InterfaceChannel
 
         rawMessageInput.GenerateRawMessage(_input, _embedTitle);
 
-        var client = BotReference.GetClientRef();
-
         try
         {
             var createdInterfaceMessage = await rawMessageInput.CreateTheMessageAndItsButtonsOnTheBaseClass(
-                client, this, true, _displayMessage, 0, _component, _ephemeral, _files);
+                this, true, _displayMessage, 0, _component, _ephemeral, _files);
 
             return createdInterfaceMessage.CachedUserMessage;
         }
@@ -207,23 +200,24 @@ public abstract class BaseChannel : InterfaceChannel
         interfaceMessage = rawMessageInput;
 
         var newMessage = await interfaceMessage.CreateTheMessageAndItsButtonsOnTheBaseClassWithAttachmentData(
-            client, this, _attachmentDatas, _displayMessage, 0, _component, _ephemeral);
+            this, _attachmentDatas, _displayMessage, 0, _component, _ephemeral);
 
         return newMessage;
     }
 
 
-    public virtual async Task PostChannelMessages(DiscordSocketClient _client)
+    public virtual async Task PostChannelMessages()
     {
         //Log.WriteLine("Starting to post channel messages on: " + channelType);
 
         Log.WriteLine("Finding channel: " + thisInterfaceChannel.ChannelType + " (" + thisInterfaceChannel.ChannelId +
             ") parent category with id: " + thisInterfaceChannel.ChannelsCategoryId);
 
+        var client = BotReference.GetClientRef();
+
         // If the MessageDescription doesn't exist, set it ID to 0 to regenerate it
 
-        var channel = _client.GetChannelAsync(thisInterfaceChannel.ChannelId).Result as ITextChannel;
-
+        var channel = client.GetChannelAsync(thisInterfaceChannel.ChannelId).Result as ITextChannel;
         if (channel == null)
         {
             Log.WriteLine(nameof(channel) + " was null!", LogLevel.CRITICAL);
@@ -249,7 +243,7 @@ public abstract class BaseChannel : InterfaceChannel
                 InterfaceMessage interfaceMessage =
                     (InterfaceMessage)EnumExtensions.GetInstance(thisInterfaceChannel.ChannelMessages.ElementAt(m).Key.ToString());
 
-                await interfaceMessage.CreateTheMessageAndItsButtonsOnTheBaseClass(_client, this, true, true);
+                await interfaceMessage.CreateTheMessageAndItsButtonsOnTheBaseClass(this, true, true);
                 thisInterfaceChannel.ChannelMessages[thisInterfaceChannel.ChannelMessages.ElementAt(m).Key] = true;
             }
         }
@@ -353,11 +347,13 @@ public abstract class BaseChannel : InterfaceChannel
         return interfaceMessageValues;
     }
 
-    public async Task<IMessageChannel> GetMessageChannelById(DiscordSocketClient _client)
+    public async Task<IMessageChannel> GetMessageChannelById()
     {
         Log.WriteLine("Getting IMessageChannel with id: " + thisInterfaceChannel.ChannelId);
 
-        var channel = await _client.GetChannelAsync(thisInterfaceChannel.ChannelId) as IMessageChannel;
+        var client = BotReference.GetClientRef();
+
+        var channel = await client.GetChannelAsync(thisInterfaceChannel.ChannelId) as IMessageChannel;
         if (channel == null)
         {
             Log.WriteLine(nameof(channel) + " was null!", LogLevel.ERROR);
@@ -375,11 +371,9 @@ public abstract class BaseChannel : InterfaceChannel
     {
         try
         {
-            var client = BotReference.GetClientRef();
-
             List<InterfaceMessage> interfaceMessages =
                 FindAllInterfaceMessagesWithNameInTheChannel(_messageNameToDelete);
-            var iMessageChannel = await GetMessageChannelById(client);
+            var iMessageChannel = await GetMessageChannelById();
 
             foreach (var interfaceMessage in interfaceMessages)
             {

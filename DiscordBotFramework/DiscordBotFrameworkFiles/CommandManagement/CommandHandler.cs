@@ -98,7 +98,7 @@ public static class CommandHandler
                 InterfaceCommand interfaceCommand = GetCommandInstance(commandName.ToString());
 
                 // For commands without option, need to implement it with null check
-                await interfaceCommand.AddNewCommandWithOption(client);
+                await interfaceCommand.AddNewCommandWithOption();
             }
             catch (Exception ex)
             {

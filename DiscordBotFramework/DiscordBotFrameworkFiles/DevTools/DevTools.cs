@@ -25,7 +25,7 @@ public static class DevTools
 
         await DeleteDatabase();
 
-        await DeleteRoles(new List<string> { "Developer", "Server Booster", "DiscordBotFrameworkDev", "Discord Me", "@everyone", "@here" });
+        await DeleteRoles(new List<string> { "FrameworkTest", "Developer", "Server Booster", "DiscordBotFrameworkDev", "Discord Me", "@everyone", "@here" });
     }
 
     private async static Task DeleteCategories(List<string> _categoriesNotToDelete)

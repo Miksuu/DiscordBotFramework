@@ -1,10 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 
-public static class Preferences
+public sealed class Preferences
 {
-    public readonly static ulong GuildID;
+    public static Preferences Instance
+    {
+        get
+        {
+            lock (padlock)
+            {
+                if (instance == null)
+                {
+                    string json = File.ReadAllText("preferences.json");
+                    instance = JsonConvert.DeserializeObject<Preferences>(json);
+                }
+                return instance;
+            }
+        }
+        set
+        {
+            instance = value;
+        }
+    }
+
+    // Singleton stuff
+    private static Preferences? instance;
+    private static readonly object padlock = new object();
+
+    public ulong GuildID;
 }

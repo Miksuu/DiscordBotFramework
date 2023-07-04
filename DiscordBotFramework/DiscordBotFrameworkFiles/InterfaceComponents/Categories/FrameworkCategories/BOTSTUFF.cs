@@ -18,12 +18,15 @@ public class BOTSTUFF : BaseCategory
         };
     }
 
-    public override List<Overwrite> GetGuildPermissions(SocketGuild _guild, SocketRole _role)
+    public override List<Overwrite> GetGuildPermissions(SocketRole _role)
     {
         Log.WriteLine("executing permissions from BOTSTUFF");
+
+        var guild = BotReference.GetGuildRef();
+
         return new List<Overwrite>
         {
-            new Overwrite(_guild.EveryoneRole.Id, PermissionTarget.Role,
+            new Overwrite(guild.EveryoneRole.Id, PermissionTarget.Role,
                 new OverwritePermissions(viewChannel: PermValue.Deny)),
         };
     }

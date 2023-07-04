@@ -62,25 +62,11 @@ public class BotReference
 
     public static SocketGuild GetGuildRef()
     {
-        if (clientRef == null)
-        {
-            string errorMessage = "Guild ref was null! wrong GuildID?";
-            Log.WriteLine(errorMessage, LogLevel.CRITICAL);
-            throw new InvalidOperationException(errorMessage);
-        }
-
         if (guildRef == null)
         {
-            guildRef = clientRef.GetGuild(Preferences.GuildID);
+            guildRef = clientRef.GetGuild(Preferences.Instance.GuildID);
         }
 
         return guildRef;
-    }
-
-    public static ulong GetGuildID()
-    {
-        Log.WriteLine("Getting the " + nameof(Preferences.GuildID) + ": " +
-            Preferences.GuildID);
-        return Preferences.GuildID;
     }
 }

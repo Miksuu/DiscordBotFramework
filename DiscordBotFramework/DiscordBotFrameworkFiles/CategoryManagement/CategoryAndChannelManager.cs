@@ -7,25 +7,22 @@ public static class CategoryAndChannelManager
     {
         Log.WriteLine("Starting to create categories and channels for the discord server");
 
-        var client = BotReference.GetClientRef();
-        var guild = BotReference.GetGuildRef();
-
-        await GenerateRegularCategories(client, guild);
+        await GenerateRegularCategories();
 
         Log.WriteLine("Done looping through the category names.");
     }
 
-    private static async Task GenerateRegularCategories(DiscordSocketClient _client, SocketGuild _guild)
+    private static async Task GenerateRegularCategories()
     {
         foreach (CategoryType categoryName in Enum.GetValues(typeof(CategoryType)))
         {
             Log.WriteLine("Looping on category name: " + categoryName);
 
-            await GenerateCategory(_client, _guild, categoryName, categoryName);
+            await GenerateCategory(categoryName, categoryName);
         }
     }
 
-    private static async Task GenerateCategory(DiscordSocketClient _client, SocketGuild _guild, CategoryType _categoryType, Enum _categoryName)
+    private static async Task GenerateCategory(CategoryType _categoryType, Enum _categoryName)
     {
         try
         {
@@ -43,14 +40,14 @@ public static class CategoryAndChannelManager
             string finalCategoryName = EnumExtensions.GetEnumMemberAttrValue(_categoryName);
             Log.WriteLine("Category name is: " + interfaceCategory.CategoryType);
 
-            SocketCategoryChannel? socketCategoryChannel = FindOrCreateSocketCategoryChannel(_guild, interfaceCategory, finalCategoryName);
+            SocketCategoryChannel? socketCategoryChannel = FindOrCreateSocketCategoryChannel(interfaceCategory, finalCategoryName);
             if (socketCategoryChannel == null)
             {
                 Log.WriteLine(nameof(socketCategoryChannel).ToString() + " was null!", LogLevel.CRITICAL);
                 return;
             }
 
-            SocketRole? role = await RoleManager.CheckIfRoleExistsByNameAndCreateItIfItDoesntElseReturnIt(_guild, finalCategoryName);
+            SocketRole? role = await RoleManager.CheckIfRoleExistsByNameAndCreateItIfItDoesntElseReturnIt(finalCategoryName);
             if (role == null)
             {
                 Log.WriteLine(nameof(role).ToString() + " was null!", LogLevel.CRITICAL);
@@ -62,7 +59,7 @@ public static class CategoryAndChannelManager
                 interfaceCategory = Database.Instance.Categories.FindInterfaceCategoryWithCategoryId(socketCategoryChannel.Id);
             }
 
-            await interfaceCategory.CreateChannelsForTheCategory(socketCategoryChannel.Id, _client, role);
+            await interfaceCategory.CreateChannelsForTheCategory(socketCategoryChannel.Id, role);
         }
         catch (Exception ex)
         {
@@ -70,8 +67,7 @@ public static class CategoryAndChannelManager
         }
     }
 
-    private static SocketCategoryChannel? FindOrCreateSocketCategoryChannel(
-        SocketGuild _guild, InterfaceCategory _interfaceCategory, string _finalCategoryName)
+    private static SocketCategoryChannel? FindOrCreateSocketCategoryChannel(InterfaceCategory _interfaceCategory, string _finalCategoryName)
     {
         bool contains = false;
 
@@ -79,7 +75,7 @@ public static class CategoryAndChannelManager
         {
             if (ct.Value.CategoryType == _interfaceCategory.CategoryType)
             {
-                contains = CategoryRestore.CheckIfCategoryHasBeenDeletedAndRestoreForCategory(ct.Key, _guild);
+                contains = CategoryRestore.CheckIfCategoryHasBeenDeletedAndRestoreForCategory(ct.Key);
                 if (contains)
                 {
                     break;
@@ -96,7 +92,8 @@ public static class CategoryAndChannelManager
                 return null;
             }
 
-            SocketCategoryChannel? socketCategoryChannel = _guild.GetCategoryChannel(dbCategory.SocketCategoryChannelId);
+            var guild = BotReference.GetGuildRef();
+            SocketCategoryChannel? socketCategoryChannel = guild.GetCategoryChannel(dbCategory.SocketCategoryChannelId);
             if (socketCategoryChannel == null)
             {
                 Log.WriteLine(nameof(socketCategoryChannel).ToString() + " was null!", LogLevel.CRITICAL);
@@ -107,7 +104,7 @@ public static class CategoryAndChannelManager
         }
         else
         {
-            SocketRole? role = RoleManager.CheckIfRoleExistsByNameAndCreateItIfItDoesntElseReturnIt(_guild, _finalCategoryName).Result;
+            SocketRole? role = RoleManager.CheckIfRoleExistsByNameAndCreateItIfItDoesntElseReturnIt(_finalCategoryName).Result;
             if (role == null)
             {
                 Log.WriteLine(nameof(role).ToString() + " was null!", LogLevel.CRITICAL);
@@ -115,7 +112,7 @@ public static class CategoryAndChannelManager
             }
 
             SocketCategoryChannel? socketCategoryChannel =
-                _interfaceCategory.CreateANewSocketCategoryChannelAndReturnIt(_guild, _finalCategoryName, role).Result;
+                _interfaceCategory.CreateANewSocketCategoryChannelAndReturnIt(_finalCategoryName, role).Result;
             if (socketCategoryChannel == null)
             {
                 Log.WriteLine(nameof(socketCategoryChannel).ToString() + " was null!", LogLevel.CRITICAL);

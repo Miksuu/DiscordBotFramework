@@ -10,6 +10,5 @@ public interface InterfaceCommand
     public CommandOption CommandOption { get; set; }
     public Task<Response> ReceiveCommandAndCheckForAdminRights(
         SocketSlashCommand _command, string _firstOptionString);
-    public Task AddNewCommandWithOption(
-        Discord.WebSocket.DiscordSocketClient _client);
+    public Task AddNewCommandWithOption();
 }

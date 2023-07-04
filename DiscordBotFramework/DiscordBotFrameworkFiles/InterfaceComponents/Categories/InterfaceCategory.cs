@@ -11,21 +11,16 @@ public interface InterfaceCategory
     public ConcurrentDictionary<ulong, InterfaceChannel> InterfaceChannels { get; set; }
     public ulong SocketCategoryChannelId { get; set; }
 
-    public abstract List<Overwrite> GetGuildPermissions(
-        SocketGuild _guild, SocketRole _role);
+    public abstract List<Overwrite> GetGuildPermissions(SocketRole _role);
 
     public Task<SocketCategoryChannel> CreateANewSocketCategoryChannelAndReturnIt(
-        SocketGuild _guild, string _categoryName, SocketRole _role);
+        string _categoryName, SocketRole _role);
     public Task CreateChannelsForTheCategory(
-        ulong _socketCategoryChannelId, DiscordSocketClient _client, SocketRole _role);
+        ulong _socketCategoryChannelId, SocketRole _role);
 
     public Task<InterfaceChannel> CreateSpecificChannelFromChannelType(
         ChannelType _channelType, ulong _socketCategoryChannelId, SocketRole _role,
         string _overrideChannelName = "", params ulong[] _allowedUsersIdsArray);
-
-    public Task<InterfaceChannel> CreateSpecificChannelFromChannelTypeWithoutRole(
-    ChannelType _channelType, ulong _socketCategoryChannelId,
-    string _overrideChannelName = "", params ulong[] _allowedUsersIdsArray);
 
     public bool FindIfInterfaceChannelExistsWithIdInTheCategory(ulong _idToSearchWith);
     public InterfaceChannel FindInterfaceChannelWithIdInTheCategory(ulong _idToSearchWith);

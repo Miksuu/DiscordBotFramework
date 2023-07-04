@@ -20,16 +20,16 @@ public class TESTCHANNEL : BaseChannel
             });
     }
 
-    public override List<Overwrite> GetGuildPermissions(
-        SocketGuild _guild, SocketRole _role, params ulong[] _allowedUsersIdsArray)
+    public override List<Overwrite> GetGuildPermissions(SocketRole _role, params ulong[] _allowedUsersIdsArray)
     {
+        var guild = BotReference.GetGuildRef();
         return new List<Overwrite>
         {
             new Overwrite(
-                _guild.EveryoneRole.Id, PermissionTarget.Role,
+                guild.EveryoneRole.Id, PermissionTarget.Role,
                 new OverwritePermissions(viewChannel: PermValue.Deny, sendMessages: PermValue.Deny)),
             new Overwrite(RoleManager.CheckIfRoleExistsByNameAndCreateItIfItDoesntElseReturnIt(
-                _guild, "Member").Result.Id, PermissionTarget.Role,
+                "Member").Result.Id, PermissionTarget.Role,
                 new OverwritePermissions(viewChannel: PermValue.Allow)),
         };
     }

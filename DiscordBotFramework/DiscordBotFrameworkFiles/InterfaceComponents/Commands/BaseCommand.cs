@@ -84,7 +84,7 @@ public abstract class BaseCommand : InterfaceCommand
     protected abstract Task<Response> ActivateCommandFunction(
         SocketSlashCommand _command, string _firstOptionString);
 
-    public async Task AddNewCommandWithOption(Discord.WebSocket.DiscordSocketClient _client)
+    public async Task AddNewCommandWithOption()
     {
         if (commandOption == null)
         {
@@ -108,8 +108,10 @@ public abstract class BaseCommand : InterfaceCommand
 
         Log.WriteLine("Done building a guild command: " + commandName, LogLevel.DEBUG);
 
-        await _client.Rest.CreateGuildCommand(
-            builtCommand, BotReference.GetGuildID());
+        var client = BotReference.GetClientRef();
+
+        await client.Rest.CreateGuildCommand(
+            builtCommand, Preferences.Instance.GuildID);
 
         Log.WriteLine("Done creating a command with option: " + guildCommand.Name, LogLevel.DEBUG);
     }

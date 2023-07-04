@@ -116,7 +116,7 @@ public abstract class BaseMessage : InterfaceMessage
 
     // If the component is not null, this is a reply
     public async Task<InterfaceMessage> CreateTheMessageAndItsButtonsOnTheBaseClass(
-        DiscordSocketClient _client, InterfaceChannel _interfaceChannel, bool _embed,
+        InterfaceChannel _interfaceChannel, bool _embed,
         bool _displayMessage = true, ulong _leagueCategoryId = 0,
         SocketMessageComponent? _component = null, bool _ephemeral = true,
         params string[] _files)
@@ -130,7 +130,9 @@ public abstract class BaseMessage : InterfaceMessage
         Log.WriteLine("Creating the channel message with id: "
             + thisInterfaceMessage.MessageChannelId + " with categoryID: " + thisInterfaceMessage.MessageCategoryId);
 
-        var textChannel = await _client.GetChannelAsync(thisInterfaceMessage.MessageChannelId) as ITextChannel;
+        var client = BotReference.GetClientRef();
+
+        var textChannel = await client.GetChannelAsync(thisInterfaceMessage.MessageChannelId) as ITextChannel;
         if (textChannel == null)
         {
             Log.WriteLine(nameof(textChannel) + " was null!", LogLevel.CRITICAL);
@@ -213,7 +215,7 @@ public abstract class BaseMessage : InterfaceMessage
                     }
                     else
                     {
-                        var iMessageChannel = await _interfaceChannel.GetMessageChannelById(_client);
+                        var iMessageChannel = await _interfaceChannel.GetMessageChannelById();
 
                         List<FileAttachment> attachments = new List<FileAttachment>();
                         for (int i = 0; i < _files.Length; i++)
@@ -252,7 +254,7 @@ public abstract class BaseMessage : InterfaceMessage
     }
 
     public async Task<InterfaceMessage> CreateTheMessageAndItsButtonsOnTheBaseClassWithAttachmentData(
-        DiscordSocketClient _client, InterfaceChannel _interfaceChannel, AttachmentData[] _attachmentDatas,
+        InterfaceChannel _interfaceChannel, AttachmentData[] _attachmentDatas,
         bool _displayMessage = true, ulong _leagueCategoryId = 0,
         SocketMessageComponent? _component = null, bool _ephemeral = true)
     {
@@ -265,7 +267,9 @@ public abstract class BaseMessage : InterfaceMessage
         Log.WriteLine("Creating the channel message with id: "
             + thisInterfaceMessage.MessageChannelId + " with categoryID: " + thisInterfaceMessage.MessageCategoryId);
 
-        var textChannel = await _client.GetChannelAsync(thisInterfaceMessage.MessageChannelId) as ITextChannel;
+        var client = BotReference.GetClientRef();
+
+        var textChannel = await client.GetChannelAsync(thisInterfaceMessage.MessageChannelId) as ITextChannel;
         if (textChannel == null)
         {
             Log.WriteLine(nameof(textChannel) + " was null!", LogLevel.CRITICAL);

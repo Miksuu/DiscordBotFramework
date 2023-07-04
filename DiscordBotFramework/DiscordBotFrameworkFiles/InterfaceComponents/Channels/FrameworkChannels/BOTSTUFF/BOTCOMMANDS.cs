@@ -13,8 +13,7 @@ public class BOTCOMMANDS : BaseChannel
         thisInterfaceChannel.ChannelType = ChannelType.BOTCOMMANDS;
     }
 
-    public override List<Overwrite> GetGuildPermissions(
-        SocketGuild _guild, SocketRole _role, params ulong[] _allowedUsersIdsArray)
+    public override List<Overwrite> GetGuildPermissions(SocketRole _role, params ulong[] _allowedUsersIdsArray)
     {
         return new List<Overwrite>
         {

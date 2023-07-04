@@ -14,12 +14,11 @@ public interface InterfaceChannel
     public ConcurrentDictionary<ulong, InterfaceMessage> InterfaceMessagesWithIds { get; set; }
 
     public abstract List<Overwrite> GetGuildPermissions(
-        SocketGuild _guild, SocketRole _role, params ulong[] _allowedUsersIdsArray);
+        SocketRole _role, params ulong[] _allowedUsersIdsArray);
 
     public Task CreateAChannelForTheCategory(
-        SocketGuild _guild, SocketRole _role, params ulong[] _allowedUsersIdsArray);
-    public Task CreateAChannelForTheCategoryWithoutRole(
-    SocketGuild _guild, params ulong[] _allowedUsersIdsArray);
+        SocketRole _role, ulong _channelCategoryId, params ulong[] _allowedUsersIdsArray);
+    public Task CreateAChannelForTheCategoryWithoutRole(params ulong[] _allowedUsersIdsArray);
     public Task<InterfaceMessage> CreateAMessageForTheChannelFromMessageName(
         MessageName _MessageName, bool _displayMessage = true,
         SocketMessageComponent? _component = null, bool _ephemeral = true);
@@ -30,7 +29,7 @@ public interface InterfaceChannel
         string _input, AttachmentData[] _attachmentDatas, string _embedTitle = "", bool _displayMessage = true,
         SocketMessageComponent? _component = null, bool _ephemeral = true);
 
-    public Task PostChannelMessages(DiscordSocketClient _client);
+    public Task PostChannelMessages();
     public InterfaceMessage FindInterfaceMessageWithNameInTheChannel(
         MessageName _messageName);
 
@@ -38,7 +37,7 @@ public interface InterfaceChannel
     public void FindInterfaceMessageWithNameInTheChannelAndUpdateItIfItExists(
         MessageName _messageName);
 
-    public Task<IMessageChannel> GetMessageChannelById(DiscordSocketClient _client);
+    public Task<IMessageChannel> GetMessageChannelById();
     public Task<string> DeleteMessagesInAChannelWithMessageName(MessageName _messageNameToDelete);
     public Task DeleteThisChannel(
         InterfaceCategory _interfaceCategory, InterfaceChannel _interfaceChannel, string _nameMustContain);
