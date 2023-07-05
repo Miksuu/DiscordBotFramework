@@ -1,4 +1,6 @@
-﻿using System.Collections.Concurrent;
+﻿using Discord;
+using System.Collections.Concurrent;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 
 [DataContract]
@@ -144,25 +146,23 @@ public class EventManager
 
                     if (!scheduledEvent.CheckIfTheEventCanBeExecuted(_currentUnixTime))
                     {
-                        Log.WriteLine("Event: " + scheduledEvent.EventId + scheduledEvent.GetType() +
-                            " with time: " + scheduledEvent.TimeToExecuteTheEventOn + " can not be executed, continuing");
+                        Log.WriteLine("Event: " + scheduledEvent.EventId + " can not be executed, continuing");
                         continue;
                     }
 
-                    Log.WriteLine("Event: " + scheduledEvent.EventId + scheduledEvent.GetType() +
-                        " with time: " + scheduledEvent.TimeToExecuteTheEventOn + " can be executed, continuing");
+                    Log.WriteLine("Event: " + scheduledEvent.EventId + " can be executed, continuing");
 
                     // Event succesfully executed
-                    var scheduledEventsToRemove = ClassScheduledEvents.Where(e => e.EventId == scheduledEvent.EventId).ToList();
-                    foreach (var item in scheduledEventsToRemove)
+                    var scheduledEventToRemove = ClassScheduledEvents.FirstOrDefault(e => e.EventId == scheduledEvent.EventId);
+                    if (scheduledEventToRemove == null)
                     {
-                        Log.WriteLine("event: " + item.EventId + " scheduledEventsToRemove: " + item.EventId);
+                        Log.WriteLine("scheduledEventToRemove is null.", LogLevel.CRITICAL);
+                        throw new InvalidOperationException("scheduledEventToRemove is null.");
                     }
 
-                    RemoveEventsFromTheScheduledEventsBag(scheduledEventsToRemove);
+                    RemoveEventFromTheScheduledEventsBag(scheduledEventToRemove);
 
-                    Log.WriteLine("Event: " + scheduledEvent.EventId + scheduledEvent.GetType() +
-                        " with time: " + scheduledEvent.TimeToExecuteTheEventOn + "executed", LogLevel.DEBUG);
+                    Log.WriteLine("Event: " + scheduledEvent.EventId + " executed", LogLevel.DEBUG);
                 }
                 catch (Exception ex)
                 {
@@ -177,39 +177,63 @@ public class EventManager
             throw new InvalidOperationException(ex.Message);
         }
     }
-
-    // Refactor this to take in single event id instead of list
-    public void RemoveEventsFromTheScheduledEventsBag(List<ScheduledEvent> _scheduledEventsToRemove)
+    public void RemoveEventFromTheScheduledEventsBag(ScheduledEvent scheduledEventToRemove)
     {
-        var updatedScheduledEvents = new ConcurrentBag<ScheduledEvent>();
-
-        foreach (var item in ClassScheduledEvents)
+        try
         {
-            if (!_scheduledEventsToRemove.Contains(item))
+            var updatedScheduledEvents = new ConcurrentBag<ScheduledEvent>();
+
+            Log.WriteLine("Removing event: " + scheduledEventToRemove.EventId + " looping though " +
+                nameof(ClassScheduledEvents) + " with count: " + ClassScheduledEvents.Count(), LogLevel.DEBUG);
+
+            foreach (ScheduledEvent scheduledEvent in ClassScheduledEvents)
             {
-                updatedScheduledEvents.Add(item);
+                try
+                {
+                    Log.WriteLine("Looping on item: " + scheduledEvent.EventId);
+                    if (scheduledEvent != scheduledEventToRemove)
+                    {
+                        Log.WriteLine(scheduledEvent.EventId + " != " + scheduledEventToRemove.EventId + " adding");
+                        updatedScheduledEvents.Add(scheduledEvent);
+                        continue;
+                    }
+
+                    Log.WriteLine(scheduledEvent.EventId + " == " + scheduledEventToRemove.EventId + ", did not add");
+                }
+                catch (Exception ex)
+                {
+                    Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+                    throw new InvalidOperationException(ex.Message);
+                }
             }
-        }
 
-        ClassScheduledEvents = updatedScheduledEvents;
+            ClassScheduledEvents = updatedScheduledEvents;
 
-        foreach (var item in _scheduledEventsToRemove)
-        {
-            if (!ClassScheduledEvents.Contains(item))
+            if (!ClassScheduledEvents.Contains(scheduledEventToRemove))
             {
-                Log.WriteLine("event: " + item.EventId + " removed", LogLevel.DEBUG);
+                Log.WriteLine("Event: " + scheduledEventToRemove.EventId + " removed", LogLevel.DEBUG);
             }
             else
             {
-                Log.WriteLine("event: " + item.EventId + ", failed to remove", LogLevel.ERROR);
+                Log.WriteLine("Event: " + scheduledEventToRemove.EventId + " failed to remove", LogLevel.ERROR);
             }
+
+            Log.WriteLine("Removed event: " + scheduledEventToRemove.EventId, LogLevel.DEBUG);
+        }
+        catch (Exception ex)
+        {
+            Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+            throw new InvalidOperationException(ex.Message);
         }
     }
+
 
     public void ClearCertainTypeOfEventsFromTheList(Type _type)
     {
         try
         {
+            Log.WriteLine("Clearing events of type: " + _type, LogLevel.DEBUG);
+
             if (ClassScheduledEvents == null)
             {
                 Log.WriteLine("ClassScheduledEvents is null.", LogLevel.CRITICAL);
@@ -220,18 +244,37 @@ public class EventManager
                 .Where(e => e.GetType() == _type)
                 .ToList();
 
-            foreach (ScheduledEvent @event in events)
+            Log.WriteLine("Found: " + events.Count + " events");
+
+            foreach (ScheduledEvent loopEvent in events)
             {
-                ScheduledEvent eventToRemove = @event; // Create a temporary variable
-                ClassScheduledEvents.TryTake(out eventToRemove);
+                try
+                {
+                    Log.WriteLine("Looping on event: " + loopEvent.EventId + " with time: " + loopEvent.TimeToExecuteTheEventOn);
+
+                    ScheduledEvent? eventToRemove = loopEvent;
+                    ClassScheduledEvents.TryTake(out eventToRemove);
+                    if (eventToRemove == null)
+                    {
+                        Log.WriteLine("eventToRemove is null.", LogLevel.CRITICAL);
+                        throw new InvalidOperationException("eventToRemove is null.");
+                    }
+
+                    Log.WriteLine("Removed event: " + eventToRemove.EventId + " with time: " + eventToRemove.TimeToExecuteTheEventOn);
+                }
+                catch (Exception ex)
+                {
+                    Log.WriteLine("Error in ClearCertainTypeOfEventsFromTheList forloop: " + ex.Message, LogLevel.CRITICAL);
+                    throw new InvalidOperationException("Error in ClearCertainTypeOfEventsFromTheList forloop: " + ex.Message);
+                }
             }
 
-            Log.WriteLine($"{events.Count} {_type.Name}(s) removed from ClassScheduledEvents.");
+            Log.WriteLine($"{events.Count} {_type.Name}(s) removed from ClassScheduledEvents.", LogLevel.DEBUG);
         }
         catch (Exception ex)
         {
-            Log.WriteLine("Error in ClearCertainTypeOfEventsFromTheList: " + ex.Message, LogLevel.ERROR);
-            throw; // Re-throw the exception to preserve the original exception stack trace
+            Log.WriteLine("Error in ClearCertainTypeOfEventsFromTheList: " + ex.Message, LogLevel.CRITICAL);
+            throw new InvalidOperationException("Error in ClearCertainTypeOfEventsFromTheList: " + ex.Message);
         }
     }
 }
