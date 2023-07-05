@@ -96,7 +96,7 @@ public static class CommandHandler
                     continue;
                 }
             }
-            Log.WriteLine("Done preparing the commands.");
+            Log.WriteLine("Done preparing the commands.", LogLevel.DEBUG);
         }
         catch (Exception ex)
         {
@@ -107,9 +107,10 @@ public static class CommandHandler
 
     private static InterfaceCommand GetCommandInstance(string _commandName)
     {
+        Log.WriteLine("getting command instance: " + _commandName, LogLevel.DEBUG);
         try
         {
-            return (InterfaceCommand)EnumExtensions.GetInstance(_commandName.ToString());
+            return (InterfaceCommand)EnumExtensions.GetInstance(_commandName);
         }
         catch (Exception ex)
         {
