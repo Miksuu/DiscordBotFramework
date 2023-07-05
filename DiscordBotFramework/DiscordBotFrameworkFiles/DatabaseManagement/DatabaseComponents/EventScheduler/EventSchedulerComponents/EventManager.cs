@@ -16,18 +16,42 @@ public class EventManager
 
     public ulong GetTimeOfEventOfType(Type _eventType)
     {
-        return GetEventByType(_eventType).TimeToExecuteTheEventOn;
+        try
+        {
+            Log.WriteLine("Getting time on: " + _eventType, LogLevel.DEBUG);
+            var time = GetEventByType(_eventType).TimeToExecuteTheEventOn;
+            Log.WriteLine("Got time on: " + _eventType + ", " + time + " returning it", LogLevel.DEBUG);
+            return time;
+        }
+        catch (Exception ex)
+        {
+            Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+            throw new InvalidOperationException(ex.Message);
+        }
     }
 
     public ulong GetTimeUntilEventOfType(Type _eventType)
     {
-        return GetEventByType(_eventType).TimeToExecuteTheEventOn - TimeService.GetCurrentUnixTime();
+        try
+        {
+            Log.WriteLine("Getting time on: " + _eventType, LogLevel.DEBUG);
+            var timeUntil = GetEventByType(_eventType).TimeToExecuteTheEventOn - TimeService.GetCurrentUnixTime();
+            Log.WriteLine("Got time on: " + _eventType + ", " + timeUntil + " returning it", LogLevel.DEBUG);
+            return timeUntil;
+        }
+        catch (Exception ex)
+        {
+            Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+            throw new InvalidOperationException(ex.Message);
+        }
     }
 
     public ScheduledEvent GetEventByType(Type _eventType)
     {
         try
         {
+            Log.WriteLine("Getting event by type: " + _eventType, LogLevel.DEBUG);
+
             if (ClassScheduledEvents == null)
             {
                 Log.WriteLine("ClassScheduledEvents is null.", LogLevel.CRITICAL);
@@ -53,12 +77,13 @@ public class EventManager
                 throw new InvalidOperationException($"Event of type {_eventType.Name} does not exist in ClassScheduledEvents.");
             }
 
+            Log.WriteLine("Found " + eventOfType + ", returning it", LogLevel.DEBUG);
             return eventOfType;
         }
         catch (Exception ex)
         {
-            Log.WriteLine("Error in GetEventByType: " + ex.Message, LogLevel.ERROR);
-            throw; // Re-throw the exception to preserve the original exception stack trace
+            Log.WriteLine("Error in GetEventByType: " + ex.Message, LogLevel.CRITICAL);
+            throw new InvalidOperationException(ex.Message);
         }
     }
 
@@ -66,6 +91,7 @@ public class EventManager
     {
         try
         {
+            Log.WriteLine("Getting list of events by type: " + _eventType, LogLevel.DEBUG);
             if (ClassScheduledEvents == null)
             {
                 Log.WriteLine("ClassScheduledEvents is null.", LogLevel.CRITICAL);
@@ -92,36 +118,63 @@ public class EventManager
                 throw new InvalidOperationException($"No events of type {_eventType.Name} exist in ClassScheduledEvents.");
             }
 
+            Log.WriteLine("Found " + eventsOfType.Count + " events, returning them", LogLevel.DEBUG);
             return eventsOfType;
         }
         catch (Exception ex)
         {
-            Log.WriteLine("Error in GetEventsByType: " + ex.Message, LogLevel.ERROR);
-            throw; // Re-throw the exception to preserve the original exception stack trace
+            Log.WriteLine("Error in GetEventsByType: " + ex.Message, LogLevel.CRITICAL);
+            throw new InvalidOperationException(ex.Message);
         }
     }
 
-
     public void HandleEvents(ulong _currentUnixTime)
     {
-        // Replace this with looping through leagues
-        foreach (ScheduledEvent scheduledEvent in ClassScheduledEvents)
+        try
         {
-            bool eventCanBeRemoved = scheduledEvent.CheckIfTheEventCanBeExecuted(_currentUnixTime);
+            Log.WriteLine("Handling events with time: " + _currentUnixTime, LogLevel.DEBUG);
 
-            if (!eventCanBeRemoved)
+            foreach (ScheduledEvent scheduledEvent in ClassScheduledEvents)
             {
-                continue;
-            }
+                // Perhaps temp, maybe move this to inside the class itself
+                try
+                {
+                    Log.WriteLine("Loop on: " + scheduledEvent.EventId + scheduledEvent.GetType() +
+                        " with time: " + scheduledEvent.TimeToExecuteTheEventOn);
 
-            // Event succesfully executed
-            var scheduledEventsToRemove = ClassScheduledEvents.Where(e => e.EventId == scheduledEvent.EventId).ToList();
-            foreach (var item in scheduledEventsToRemove)
-            {
-                Log.WriteLine("event: " + item.EventId + " scheduledEventsToRemove: " + item.EventId);
-            }
+                    if (!scheduledEvent.CheckIfTheEventCanBeExecuted(_currentUnixTime))
+                    {
+                        Log.WriteLine("Event: " + scheduledEvent.EventId + scheduledEvent.GetType() +
+                            " with time: " + scheduledEvent.TimeToExecuteTheEventOn + " can not be executed, continuing");
+                        continue;
+                    }
 
-            RemoveEventsFromTheScheduledEventsBag(scheduledEventsToRemove);
+                    Log.WriteLine("Event: " + scheduledEvent.EventId + scheduledEvent.GetType() +
+                        " with time: " + scheduledEvent.TimeToExecuteTheEventOn + " can be executed, continuing");
+
+                    // Event succesfully executed
+                    var scheduledEventsToRemove = ClassScheduledEvents.Where(e => e.EventId == scheduledEvent.EventId).ToList();
+                    foreach (var item in scheduledEventsToRemove)
+                    {
+                        Log.WriteLine("event: " + item.EventId + " scheduledEventsToRemove: " + item.EventId);
+                    }
+
+                    RemoveEventsFromTheScheduledEventsBag(scheduledEventsToRemove);
+
+                    Log.WriteLine("Event: " + scheduledEvent.EventId + scheduledEvent.GetType() +
+                        " with time: " + scheduledEvent.TimeToExecuteTheEventOn + "executed", LogLevel.DEBUG);
+                }
+                catch (Exception ex)
+                {
+                    Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+                    continue;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.WriteLine("Error in HandleEvents: " + ex.Message, LogLevel.CRITICAL);
+            throw new InvalidOperationException(ex.Message);
         }
     }
 
