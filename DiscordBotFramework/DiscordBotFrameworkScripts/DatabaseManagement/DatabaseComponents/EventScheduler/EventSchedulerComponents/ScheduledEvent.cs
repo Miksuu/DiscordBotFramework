@@ -36,11 +36,18 @@ public abstract class ScheduledEvent : InterfaceEventType
         set => matchChannelIdCached.SetValue(value);
     }
 
+    public ulong DivisibleByInterval
+    {
+        get => divisibleByInterval.GetValue();
+        set => divisibleByInterval.SetValue(value);
+    }
+
     [DataMember] protected logVar<ulong> timeToExecuteTheEventOn = new logVar<ulong>();
     [DataMember] protected logVar<int> eventId = new logVar<int>();
     [DataMember] protected logVar<bool> eventIsBeingExecuted = new logVar<bool>();
     [DataMember] protected logVar<ulong> leagueCategoryIdCached = new logVar<ulong>();
     [DataMember] protected logVar<ulong> matchChannelIdCached = new logVar<ulong>();
+    [DataMember] protected logVar<ulong> divisibleByInterval = new logVar<ulong>(60);
 
     public ScheduledEvent() { }
 
@@ -71,7 +78,7 @@ public abstract class ScheduledEvent : InterfaceEventType
 
             return true;
         }
-        else if (_currentUnixTime % 5 == 0 && _currentUnixTime <= TimeToExecuteTheEventOn)
+        else if (_currentUnixTime % DivisibleByInterval == 0 && _currentUnixTime <= TimeToExecuteTheEventOn)
         {
             Log.WriteLine("event: " + EventId + " going to check the event status");
             CheckTheScheduledEventStatus();
@@ -88,13 +95,14 @@ public abstract class ScheduledEvent : InterfaceEventType
     }
 
     protected void SetupScheduledEvent(
-        ulong _timeFromNowToExecuteOn, ConcurrentBag<ScheduledEvent> _scheduledEvents)
+        ulong _timeFromNowToExecuteOn, ConcurrentBag<ScheduledEvent> _scheduledEvents, ulong _divisibleByInterval = 5)
     {
         Log.WriteLine("Setting " + typeof(ScheduledEvent) + "' TimeToExecuteTheEventOn: " +
             _timeFromNowToExecuteOn + " seconds from now");
 
         ulong currentUnixTime = TimeService.GetCurrentUnixTime();
         TimeToExecuteTheEventOn = currentUnixTime + (ulong)_timeFromNowToExecuteOn;
+        DivisibleByInterval = _divisibleByInterval;
         EventId = ++Database.Instance.EventScheduler.EventCounter;
 
         // Replace this with league of match specific ScheduledEvents list
