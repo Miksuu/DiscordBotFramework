@@ -35,6 +35,11 @@ public static class SerializationManager
             FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(Database.dbPath, Database.dbFileName);
             File.Replace(dbTempPathWithFileName, Database.dbPathWithFileName, null);
         }
+        catch (Exception ex)
+        {
+            Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+            throw new InvalidOperationException(ex.Message);
+        }
         finally
         {
             semaphore.Release();
@@ -52,45 +57,61 @@ public static class SerializationManager
 
     public static Task DeSerializeDB()
     {
-        Log.WriteLine("DESERIALIZATION STARTING!", LogLevel.SERIALIZATION);
+        try
+        {
+            Log.WriteLine("DESERIALIZATION STARTING!", LogLevel.SERIALIZATION);
 
-        FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(Database.dbPath, Database.dbFileName);
+            FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(Database.dbPath, Database.dbFileName);
 
-        string json = File.ReadAllText(Database.dbPathWithFileName);
+            string json = File.ReadAllText(Database.dbPathWithFileName);
 
-        HandleDatabaseCreationOrLoading(json);
+            HandleDatabaseCreationOrLoading(json);
 
-        Log.WriteLine("DB DESERIALIZATION DONE!", LogLevel.SERIALIZATION);
+            Log.WriteLine("DB DESERIALIZATION DONE!", LogLevel.SERIALIZATION);
 
-        return Task.CompletedTask;
+            return Task.CompletedTask;
+        }
+        catch (Exception ex)
+        {
+            Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+            throw new InvalidOperationException(ex.Message);
+        }
     }
 
     // _json param to 0 to force creation of the new db
     public static Task HandleDatabaseCreationOrLoading(string _json)
     {
-        if (_json == "0")
+        try
         {
-            //FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(dbPath, dbFileName);
-            Database.Instance = new();
-            Log.WriteLine("json was " + _json + ", creating a new db instance", LogLevel.DEBUG);
+            if (_json == "0")
+            {
+                //FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(dbPath, dbFileName);
+                Database.Instance = new();
+                Log.WriteLine("json was " + _json + ", creating a new db instance", LogLevel.DEBUG);
+
+                return Task.CompletedTask;
+            }
+
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            settings.TypeNameHandling = TypeNameHandling.Auto;
+            settings.NullValueHandling = NullValueHandling.Include;
+            settings.ObjectCreationHandling = ObjectCreationHandling.Replace;
+
+            var newDeserializedObject = JsonConvert.DeserializeObject<Database>(_json, settings);
+
+            if (newDeserializedObject == null)
+            {
+                return Task.CompletedTask;
+            }
+
+            Database.Instance = newDeserializedObject;
 
             return Task.CompletedTask;
         }
-
-        JsonSerializerSettings settings = new JsonSerializerSettings();
-        settings.TypeNameHandling = TypeNameHandling.Auto;
-        settings.NullValueHandling = NullValueHandling.Include;
-        settings.ObjectCreationHandling = ObjectCreationHandling.Replace;
-
-        var newDeserializedObject = JsonConvert.DeserializeObject<Database>(_json, settings);
-
-        if (newDeserializedObject == null)
+        catch (Exception ex)
         {
-            return Task.CompletedTask;
+            Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+            throw new InvalidOperationException(ex.Message);
         }
-
-        Database.Instance = newDeserializedObject;
-
-        return Task.CompletedTask;
     }
 }
