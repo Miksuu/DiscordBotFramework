@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using System.Collections.Concurrent;
 using System.ComponentModel.Design;
 using System.Runtime.Serialization;
@@ -38,23 +38,9 @@ public class EventScheduler
 
         LastUnixTimeCheckedOn = currentUnixTime;
 
-        public async Task CheckCurrentTimeAndExecuteScheduledEvents(bool _clearEventOnTheStartup = false)
-        {
-            ulong currentUnixTime = TimeService.GetCurrentUnixTime();
 
-            Log.WriteLine("Time: " + currentUnixTime + " with: " +
-                nameof(_clearEventOnTheStartup) + ": " + _clearEventOnTheStartup);
+        ProgramRuntime.eventManager.HandleEvents(currentUnixTime);
 
-            // Might get caused by the daylight savings
-            if (currentUnixTime < LastUnixTimeCheckedOn)
-            {
-                Log.WriteLine("Current unix time was smaller than last unix time that was checked on!", LogLevel.ERROR);
-            }
-
-            LastUnixTimeCheckedOn = currentUnixTime;
-
-            ProgramRuntime.eventManager.HandleEvents(currentUnixTime);
-        }
     }
 
     public async void EventSchedulerLoop()
