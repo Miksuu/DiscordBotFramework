@@ -38,9 +38,7 @@ public class EventScheduler
 
         LastUnixTimeCheckedOn = currentUnixTime;
 
-
         ProgramRuntime.eventManager.HandleEvents(currentUnixTime);
-
     }
 
     public async void EventSchedulerLoop()
