@@ -37,5 +37,5 @@ public interface InterfaceMessage
     public Task<Discord.IMessage> GetMessageById(IMessageChannel _channel);
 
     public InterfaceButton FindButtonWithComponentDataCustomIdInTheMessage(string _componentDataCustomId);
-    protected abstract string GenerateMessageFooter();
+    public abstract string GenerateMessageFooter();
 }
