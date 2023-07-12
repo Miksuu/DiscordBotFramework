@@ -503,5 +503,5 @@ public abstract class BaseMessage : InterfaceMessage
         return foundButton;
     }
 
-    protected abstract string GenerateMessageFooter();
-}
+    public abstract string GenerateMessageFooter();
+}   
