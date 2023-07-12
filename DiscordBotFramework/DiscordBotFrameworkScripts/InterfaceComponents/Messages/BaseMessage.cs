@@ -322,7 +322,8 @@ public abstract class BaseMessage : InterfaceMessage
                 // set the title, description, and color of the embedded MessageDescription
                 embed.WithTitle(thisInterfaceMessage.MessageEmbedTitle)
                      .WithDescription(messageForGenerating)
-                     .WithColor(messageEmbedColor);
+                     .WithColor(messageEmbedColor)
+                     .WithFooter(GenerateMessageFooter());
 
                 // add a field to the embedded MessageDescription
                 //embed.AddField("Field Name", "Field Value");
@@ -380,7 +381,8 @@ public abstract class BaseMessage : InterfaceMessage
             // set the title, description, and color of the embedded MessageDescription
             embed.WithTitle(thisInterfaceMessage.MessageEmbedTitle)
                  .WithDescription(thisInterfaceMessage.MessageDescription)
-                 .WithColor(messageEmbedColor);
+                 .WithColor(messageEmbedColor)
+                 .WithFooter(GenerateMessageFooter());
 
             await channel.ModifyMessageAsync(thisInterfaceMessage.MessageId, m => m.Embed = embed.Build());
 
