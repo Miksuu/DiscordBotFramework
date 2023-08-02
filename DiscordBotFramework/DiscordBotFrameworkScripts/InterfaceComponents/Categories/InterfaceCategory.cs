@@ -22,6 +22,11 @@ public interface InterfaceCategory
         ChannelType _channelType, ulong _socketCategoryChannelId, SocketRole _role,
         string _overrideChannelName = "", params ulong[] _allowedUsersIdsArray);
 
+    public Task<InterfaceChannel> CreateSpecificChannelFromChannelTypeWithoutRole(
+    ChannelType _channelType, ulong _socketCategoryChannelId,
+    string _overrideChannelName = "",
+    params ulong[] _allowedUsersIdsArray);
+
     public bool FindIfInterfaceChannelExistsWithIdInTheCategory(ulong _idToSearchWith);
     public InterfaceChannel FindInterfaceChannelWithIdInTheCategory(ulong _idToSearchWith);
     public InterfaceChannel FindInterfaceChannelWithNameInTheCategory(ChannelType _nameToSearchWith);

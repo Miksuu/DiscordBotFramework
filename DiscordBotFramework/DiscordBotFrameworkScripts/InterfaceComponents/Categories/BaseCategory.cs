@@ -105,6 +105,79 @@ public abstract class BaseCategory : InterfaceCategory
         }
     }
 
+    public async Task<InterfaceChannel> CreateSpecificChannelFromChannelTypeWithoutRole(
+    ChannelType _channelType, ulong _socketCategoryChannelId,
+    string _overrideChannelName = "",// Keeps the functionality, but overrides the channel name
+                                     // It is used for creating matches with correct name ID right now.
+    params ulong[] _allowedUsersIdsArray)
+    {
+        bool channelExists = false;
+
+        Log.WriteLine("Creating channel name: " + _channelType, LogLevel.DEBUG);
+
+        var guild = BotReference.GetGuildRef();
+
+        InterfaceChannel interfaceChannel = GetChannelInstance(_channelType.ToString());
+
+        Log.WriteLine("interfaceChannel initialsetup: " +
+            interfaceChannel.ChannelType.ToString(), LogLevel.DEBUG);
+
+        interfaceChannel.ChannelName =
+            GetChannelNameFromOverridenString(_overrideChannelName, _channelType);
+
+        foreach (var item in InterfaceChannels)
+        {
+            Log.WriteLine(item.Value.ChannelName.ToString(), LogLevel.DEBUG);
+        }
+
+        // Channel found from the basecategory (it exists)
+        if (!InterfaceChannels.Any(
+            x => x.Value.ChannelName == interfaceChannel.ChannelName))
+        {
+            Log.WriteLine("Creating a channel named: " + interfaceChannel.ChannelType +
+            " for category: " + thisInterfaceCategory.CategoryType + " (" +
+            _socketCategoryChannelId + ")" + " with name: " +
+            interfaceChannel.ChannelName, LogLevel.DEBUG);
+
+            await interfaceChannel.CreateAChannelForTheCategoryWithoutRole(_allowedUsersIdsArray);
+
+            interfaceChannel.InterfaceMessagesWithIds.Clear();
+
+            InterfaceChannels.TryAdd(interfaceChannel.ChannelId, interfaceChannel);
+
+            Log.WriteLine("Done adding to the db. Count is now: " +
+                InterfaceChannels.Count +
+                " for the ConcurrentBag of category: " + thisInterfaceCategory.CategoryType.ToString() +
+                " (" + _socketCategoryChannelId + ")");
+        }
+
+        Log.WriteLine(nameof(InterfaceChannels) + " with count: " + InterfaceChannels.Count +
+            " already contains channel: " + interfaceChannel.ChannelName, LogLevel.DEBUG);
+
+        foreach (var channel in InterfaceChannels)
+        {
+            Log.WriteLine(channel.Value.ChannelType + " when searching for: " + _channelType +
+                " with id: " + channel.Value.ChannelId, LogLevel.DEBUG);
+        }
+
+        // Replace interfaceChannel with a one that is from the database
+        interfaceChannel = InterfaceChannels.FirstOrDefault(
+            x => x.Value.ChannelType == _channelType).Value;
+
+        Log.WriteLine("Replaced with: " +
+            interfaceChannel.ChannelType + " from db. with id: " + interfaceChannel.ChannelId, LogLevel.DEBUG);
+
+        channelExists = interfaceChannel.CheckIfChannelHasBeenDeletedAndRestoreForCategory(
+            _socketCategoryChannelId);
+
+        interfaceChannel.ChannelsCategoryId = _socketCategoryChannelId;
+
+        Log.WriteLine("Done creating channel: " + interfaceChannel.ChannelId + " with name: "
+            + interfaceChannel.ChannelName);
+
+        return interfaceChannel;
+    }
+
     public async Task<InterfaceChannel> CreateSpecificChannelFromChannelType(
         ChannelType _channelType, ulong _socketCategoryChannelId, SocketRole _role,
         string _overrideChannelName = "",// Keeps the functionality, but overrides the channel name
@@ -287,7 +360,7 @@ public abstract class BaseCategory : InterfaceCategory
                 " not found, regenerating it...", LogLevel.DEBUG);
 
             // Delete the old entry from the database
-            //Database.Instance.Categories.RemoveFromCreatedCategoryWithChannelWithKey(
+            //DiscordBotDatabase.Instance.Categories.RemoveFromCreatedCategoryWithChannelWithKey(
             //    _categoryKey);
 
             return false;
