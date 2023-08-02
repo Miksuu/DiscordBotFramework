@@ -42,7 +42,7 @@ public static class SerializationManager
                     }
 
                     FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.dbPathWithFileName, "database.json");
-                    File.Replace(DiscordBotDatabase.dbTempPathWithFileName, DiscordBotDatabase.dbPathWithFileName, null);
+                    File.Replace(DiscordBotDatabase.dbTempPathWithFileName, DiscordBotDatabase.dbPathWithFileName + ".json", null);
                 }
                 else
                 {
@@ -55,7 +55,7 @@ public static class SerializationManager
                     }
 
                     FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(Database.dbPathWithFileName, "database.json");
-                    File.Replace(Database.dbTempPathWithFileName, Database.dbPathWithFileName, null);
+                    File.Replace(Database.dbTempPathWithFileName, Database.dbPathWithFileName + ".json", null);
                 }
 
 
@@ -91,7 +91,7 @@ public static class SerializationManager
             {
                 FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(dbStringLocationKvp.Value, "database.json");
 
-                string json = File.ReadAllText(dbStringLocationKvp.Value);
+                string json = File.ReadAllText(dbStringLocationKvp.Value + @"\database.json");
 
                 if (dbStringLocationKvp.Key == 0)
                 {

@@ -98,8 +98,8 @@ public static class FileManager
 
 
         // Delete db here
-        File.Delete(@"C:\DiscordBotFramework\Data\database.json");
-        await SerializationManager.HandleDatabaseCreationOrLoading("0");
+        //File.Delete(@"C:\DiscordBotFramework\Data\database.json");
+        //await SerializationManager.HandleDatabaseCreationOrLoading("0");
     }
 
     public async static void DeleteFileIfItExists(string _filePath)
