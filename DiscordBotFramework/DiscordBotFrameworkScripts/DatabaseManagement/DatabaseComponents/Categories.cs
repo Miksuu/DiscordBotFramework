@@ -16,8 +16,6 @@ public class Categories
     // ConcurrentDictionary of channel categories and channelTypes inside them
     [DataMember] private logConcurrentDictionary<ulong, InterfaceCategory> createdCategoriesWithChannels =
         new logConcurrentDictionary<ulong, InterfaceCategory>();
-    [DataMember] private logConcurrentDictionary<ulong, ulong> matchChannelsIdWithCategoryId =
-        new logConcurrentDictionary<ulong, ulong>();
 
     public InterfaceCategory FindInterfaceCategoryWithCategoryId(
         ulong _categoryIdToSearchWith)
