@@ -1,11 +1,13 @@
 using Discord;
 using System.Collections.Concurrent;
+using System.Net.WebSockets;
+using System.Reflection;
 using System.Runtime.Serialization;
 
 [DataContract]
-public class Database
+public class DiscordBotDatabase
 {
-    public static Database Instance
+    public static DiscordBotDatabase Instance
     {
         get
         {
@@ -13,7 +15,7 @@ public class Database
             {
                 if (instance == null)
                 {
-                    instance = new Database();
+                    instance = new DiscordBotDatabase();
                 }
                 return instance;
             }
@@ -25,13 +27,16 @@ public class Database
     }
 
     // Singleton stuff
-    private static Database? instance;
+    private static DiscordBotDatabase? instance;
     private static readonly object padlock = new object();
 
+    static string appName = Assembly.GetEntryAssembly()?.GetName()?.FullName;
+
     // File paths
-    public static string dbPath = @"C:\DiscordBotFramework\Data";
+    public static string mainAppnameDataDirectory = @"C:\" + appName + @"\Data\";
+    public static string discordDataDir = mainAppnameDataDirectory + @"\DiscordBotDatabase";
     public static string dbFileName = "database.json";
-    public static string dbPathWithFileName = dbPath + @"\" + dbFileName;
+    public static string dbPathWithFileName = discordDataDir + @"\" + dbFileName;
 
     // The Database components
     [DataMember] public Admins Admins = new Admins();

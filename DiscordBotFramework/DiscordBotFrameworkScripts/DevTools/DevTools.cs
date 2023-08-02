@@ -95,7 +95,7 @@ public static class DevTools
     private async static Task DeleteDatabase()
     {
         Log.WriteLine("Deleting database", LogLevel.DEBUG);
-        FileManager.DeleteFileIfItExists(Database.dbPathWithFileName);
+        FileManager.DeleteFileIfItExists(DiscordBotDatabase.dbPathWithFileName);
         await SerializationManager.HandleDatabaseCreationOrLoading("0");
         Log.WriteLine("Done deleting database", LogLevel.DEBUG);
     }

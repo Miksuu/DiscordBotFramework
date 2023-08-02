@@ -123,7 +123,7 @@ public class Categories
         Log.WriteLine("Getting jump URL with: " + _leagueCategoryId +
             " | " + _channelId + " | " + _messageName);
 
-        var messageToFind = Database.Instance.Categories.FindInterfaceCategoryWithCategoryId(
+        var messageToFind = DiscordBotDatabase.Instance.Categories.FindInterfaceCategoryWithCategoryId(
             _leagueCategoryId).FindInterfaceChannelWithIdInTheCategory(
                 _channelId).FindInterfaceMessageWithNameInTheChannel(
                     _messageName);

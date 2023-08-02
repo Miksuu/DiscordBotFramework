@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 public static class SerializationManager
 {
     static string dbTempFileName = "database.tmp";
-    static string dbTempPathWithFileName = Database.dbPath + @"\" + dbTempFileName;
+    static string dbTempPathWithFileName = DiscordBotDatabase.mainAppnameDataDir + @"\" + dbTempFileName;
     static SemaphoreSlim semaphore = new SemaphoreSlim(1);
 
     public static async Task SerializeDB()
@@ -27,13 +27,13 @@ public static class SerializationManager
             using (StreamWriter sw = new StreamWriter(dbTempPathWithFileName))
             using (JsonWriter writer = new JsonTextWriter(sw))
             {
-                serializer.Serialize(writer, Database.Instance, typeof(Database));
+                serializer.Serialize(writer, DiscordBotDatabase.Instance, typeof(DiscordBotDatabase));
                 writer.Close();
                 sw.Close();
             }
 
-            FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(Database.dbPath, Database.dbFileName);
-            File.Replace(dbTempPathWithFileName, Database.dbPathWithFileName, null);
+            FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.mainAppnameDataDir, DiscordBotDatabase.dbFileName);
+            File.Replace(dbTempPathWithFileName, DiscordBotDatabase.dbPathWithFileName, null);
         }
         catch (Exception ex)
         {
@@ -61,9 +61,9 @@ public static class SerializationManager
         {
             Log.WriteLine("DESERIALIZATION STARTING!", LogLevel.SERIALIZATION);
 
-            FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(Database.dbPath, Database.dbFileName);
+            FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.mainAppnameDataDir, DiscordBotDatabase.dbFileName);
 
-            string json = File.ReadAllText(Database.dbPathWithFileName);
+            string json = File.ReadAllText(DiscordBotDatabase.dbPathWithFileName);
 
             HandleDatabaseCreationOrLoading(json);
 
@@ -86,7 +86,7 @@ public static class SerializationManager
             if (_json == "0")
             {
                 //FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(dbPath, dbFileName);
-                Database.Instance = new();
+                DiscordBotDatabase.Instance = new();
                 Log.WriteLine("json was " + _json + ", creating a new db instance", LogLevel.DEBUG);
 
                 return Task.CompletedTask;
@@ -97,14 +97,14 @@ public static class SerializationManager
             settings.NullValueHandling = NullValueHandling.Include;
             settings.ObjectCreationHandling = ObjectCreationHandling.Replace;
 
-            var newDeserializedObject = JsonConvert.DeserializeObject<Database>(_json, settings);
+            var newDeserializedObject = JsonConvert.DeserializeObject<DiscordBotDatabase>(_json, settings);
 
             if (newDeserializedObject == null)
             {
                 return Task.CompletedTask;
             }
 
-            Database.Instance = newDeserializedObject;
+            DiscordBotDatabase.Instance = newDeserializedObject;
 
             return Task.CompletedTask;
         }

@@ -12,7 +12,7 @@ public static class ButtonHandler
             ulong componentChannelId = _component.Channel.Id;
             ulong componentMessageId = _component.Message.Id;
 
-            var category = Database.Instance.Categories.FindInterfaceCategoryWithChannelId(componentChannelId);
+            var category = DiscordBotDatabase.Instance.Categories.FindInterfaceCategoryWithChannelId(componentChannelId);
             var interfaceMessage = category.FindInterfaceChannelWithIdInTheCategory(
                 componentChannelId).FindInterfaceMessageWithIdInTheChannel(
                     componentMessageId);

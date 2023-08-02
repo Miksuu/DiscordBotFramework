@@ -63,7 +63,7 @@ public abstract class BaseCommand : InterfaceCommand
 
         Log.WriteLine("Received command " + commandName + " by: " + commandSenderId);
 
-        bool senderIsAdmin = Database.Instance.Admins.CheckIfCommandSenderWasAnAdmin(_command);
+        bool senderIsAdmin = DiscordBotDatabase.Instance.Admins.CheckIfCommandSenderWasAnAdmin(_command);
 
         if (isAdminCommand && senderIsAdmin)
         {

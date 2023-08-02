@@ -55,9 +55,9 @@ public static class CategoryAndChannelManager
 
             SocketRole role = await RoleManager.CheckIfRoleExistsByNameAndCreateItIfItDoesntElseReturnIt(finalCategoryName);
 
-            if (Database.Instance.Categories.FindIfInterfaceCategoryExistsWithCategoryId(socketCategoryChannelId))
+            if (DiscordBotDatabase.Instance.Categories.FindIfInterfaceCategoryExistsWithCategoryId(socketCategoryChannelId))
             {
-                interfaceCategory = Database.Instance.Categories.FindInterfaceCategoryWithCategoryId(socketCategoryChannelId);
+                interfaceCategory = DiscordBotDatabase.Instance.Categories.FindInterfaceCategoryWithCategoryId(socketCategoryChannelId);
             }
 
             await interfaceCategory.CreateChannelsForTheCategory(socketCategoryChannelId, role);
@@ -75,7 +75,7 @@ public static class CategoryAndChannelManager
     {
         Log.WriteLine("Looking for: " + _categoryType, LogLevel.DEBUG);
 
-        foreach (var categoryKvp in Database.Instance.Categories.CreatedCategoriesWithChannels)
+        foreach (var categoryKvp in DiscordBotDatabase.Instance.Categories.CreatedCategoriesWithChannels)
         {
             try
             {
@@ -113,7 +113,7 @@ public static class CategoryAndChannelManager
             {
                 Log.WriteLine("True with: " + _interfaceCategory.CategoryType);
 
-                InterfaceCategory dbCategory = Database.Instance.Categories.FindInterfaceCategoryByCategoryName(_interfaceCategory.CategoryType);
+                InterfaceCategory dbCategory = DiscordBotDatabase.Instance.Categories.FindInterfaceCategoryByCategoryName(_interfaceCategory.CategoryType);
 
                 Log.WriteLine("Found dbCategory: " + dbCategory.CategoryType);
 
@@ -135,7 +135,7 @@ public static class CategoryAndChannelManager
 
                 Log.WriteLine("found id: " + socketCategoryChannelId);
 
-                Database.Instance.Categories.AddToCreatedCategoryWithChannelWithUlongAndInterfaceCategory(socketCategoryChannelId, _interfaceCategory);
+                DiscordBotDatabase.Instance.Categories.AddToCreatedCategoryWithChannelWithUlongAndInterfaceCategory(socketCategoryChannelId, _interfaceCategory);
 
                 Log.WriteLine("Added, returning found id: " + socketCategoryChannelId, LogLevel.DEBUG);
                 return socketCategoryChannelId;
