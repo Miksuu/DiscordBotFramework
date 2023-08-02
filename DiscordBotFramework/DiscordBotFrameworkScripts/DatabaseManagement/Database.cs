@@ -5,9 +5,9 @@ using System.Reflection;
 using System.Runtime.Serialization;
 
 [DataContract]
-public class DiscordBotDatabase
+public class Database
 {
-    public static DiscordBotDatabase Instance
+    public static Database Instance
     {
         get
         {
@@ -15,7 +15,7 @@ public class DiscordBotDatabase
             {
                 if (instance == null)
                 {
-                    instance = new DiscordBotDatabase();
+                    instance = new Database();
                 }
                 return instance;
             }
@@ -27,7 +27,7 @@ public class DiscordBotDatabase
     }
 
     // Singleton stuff
-    private static DiscordBotDatabase? instance;
+    private static Database? instance;
     private static readonly object padlock = new object();
 
     static string appName = Assembly.GetEntryAssembly()?.GetName()?.FullName;
