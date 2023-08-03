@@ -11,7 +11,7 @@ public static class DevTools
         await DeleteCategories(new List<string> { "main-category" });
         await DeleteChannels(new List<string> { "info", "test", "main-category" });
 
-        //FileManager.DeleteDirectoryIfItExists(Log.logsPath);
+        FileManager.DeleteDirectoryIfItExists(Log.logsPath);
 
         await DeleteDatabase();
         await DeleteRoles(new List<string> { "AirCombatMatchmakerBotDev", "FrameworkTest", "Developer", "Server Booster", "DiscordBotFrameworkDev", "Discord Me", "@everyone", "@here" });
