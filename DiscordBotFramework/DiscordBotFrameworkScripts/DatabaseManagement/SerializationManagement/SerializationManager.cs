@@ -10,8 +10,8 @@ public static class SerializationManager
 
     static Dictionary<int, string> listOfDbNames = new Dictionary<int, string>
             {
-                { 0, DiscordBotDatabase.dbPathWithFileName },
-                { 1, Database.dbPathWithFileName },
+                { 0, DiscordBotDatabase.discordDbPathWithFileName },
+                { 1, DiscordBotDatabase.dbPathWithFileName },
             };
 
     public static async Task SerializeDB()
@@ -33,7 +33,7 @@ public static class SerializationManager
             {
                 if (dbStringLocationKvp.Key == 0)
                 {
-                    using (StreamWriter sw = new StreamWriter(DiscordBotDatabase.dbTempPathWithFileName))
+                    using (StreamWriter sw = new StreamWriter(DiscordBotDatabase.discorDdbTempPathWithFileName))
                     using (JsonWriter writer = new JsonTextWriter(sw))
                     {
                         serializer.Serialize(writer, DiscordBotDatabase.Instance, typeof(DiscordBotDatabase));
@@ -41,12 +41,12 @@ public static class SerializationManager
                         sw.Close();
                     }
 
-                    FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.dbPathWithFileName, "database.json");
-                    File.Replace(DiscordBotDatabase.dbTempPathWithFileName, DiscordBotDatabase.dbPathWithFileName + ".json", null);
+                    FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.discordDbPathWithFileName, "database.json");
+                    File.Replace(DiscordBotDatabase.discorDdbTempPathWithFileName, DiscordBotDatabase.discordDbPathWithFileName + ".json", null);
                 }
                 else
                 {
-                    using (StreamWriter sw = new StreamWriter(Database.dbTempPathWithFileName))
+                    using (StreamWriter sw = new StreamWriter(DiscordBotDatabase.dbTempPathWithFileName))
                     using (JsonWriter writer = new JsonTextWriter(sw))
                     {
                         serializer.Serialize(writer, Database.Instance, typeof(Database));
@@ -54,8 +54,8 @@ public static class SerializationManager
                         sw.Close();
                     }
 
-                    FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(Database.dbPathWithFileName, "database.json");
-                    File.Replace(Database.dbTempPathWithFileName, Database.dbPathWithFileName + ".json", null);
+                    FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.dbPathWithFileName, "database.json");
+                    File.Replace(DiscordBotDatabase.dbTempPathWithFileName, DiscordBotDatabase.dbPathWithFileName + ".json", null);
                 }
 
 

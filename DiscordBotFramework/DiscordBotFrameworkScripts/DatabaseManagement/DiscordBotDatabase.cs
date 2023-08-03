@@ -32,13 +32,21 @@ public class DiscordBotDatabase
 
     static string appName = GetApplicationName();
 
-    // File paths
-    public static string mainAppnameDataDirectory = @"C:\" + appName + @"\Data\";
+    // File paths for the discord database
+    public static string mainAppnameDirectory = @"C:\" + appName;
+    public static string mainAppnameDataDirectory = mainAppnameDirectory + @"\Data\";
     public static string discordDataDir = mainAppnameDataDirectory + @"\DiscordBotDatabase";
-    public static string dbPathWithFileName = discordDataDir + @"\";
+    public static string discordDbPathWithFileName = discordDataDir + @"\";
+
+    static string discordDbTempFileName = "database.tmp";
+    public static string discorDdbTempPathWithFileName = discordDbPathWithFileName + @"\" + discordDbTempFileName;
+
+    // File paths for the database
+    public static string dataDir = mainAppnameDataDirectory + @"\Database";
+    public static string dbPathWithFileName = dataDir + @"\";
 
     static string dbTempFileName = "database.tmp";
-    public static string dbTempPathWithFileName = DiscordBotDatabase.dbPathWithFileName + @"\" + dbTempFileName;
+    public static string dbTempPathWithFileName = dbPathWithFileName + @"\" + dbTempFileName;
 
     // The Database components
     [DataMember] public Admins Admins = new Admins();
