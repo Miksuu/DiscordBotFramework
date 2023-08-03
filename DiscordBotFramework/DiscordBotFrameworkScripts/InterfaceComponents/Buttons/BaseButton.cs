@@ -87,7 +87,7 @@ public abstract class BaseButton : InterfaceButton
 
     public Discord.ButtonBuilder CreateTheButton(
         string _customId, int _buttonIndex, ulong _buttonCategoryId,
-        ulong _leagueCategoryId = 0)
+        ulong _channelCategoryId = 0)
     {
         Log.WriteLine("Creating a button: " + buttonName + " | label: " +
             thisInterfaceButton.ButtonLabel + " | custom-id:" + _customId + " with style: " +
@@ -96,7 +96,7 @@ public abstract class BaseButton : InterfaceButton
 
         //buttonIndex = _buttonIndex;
 
-        string tempCustomId = GenerateCustomButtonProperties(_buttonIndex, _leagueCategoryId);
+        string tempCustomId = GenerateCustomButtonProperties(_buttonIndex, _channelCategoryId);
         Log.WriteLine("tempCustomId: " + tempCustomId);
 
         if (tempCustomId != "")
@@ -121,7 +121,7 @@ public abstract class BaseButton : InterfaceButton
         return button;
     }
 
-    protected abstract string GenerateCustomButtonProperties(int _buttonIndex, ulong _leagueCategoryId);
+    protected abstract string GenerateCustomButtonProperties(int _buttonIndex, ulong _channelCategoryId);
 
     public async void CallButtonActivation(SocketMessageComponent _component, InterfaceMessage _interfaceMessage)
     {

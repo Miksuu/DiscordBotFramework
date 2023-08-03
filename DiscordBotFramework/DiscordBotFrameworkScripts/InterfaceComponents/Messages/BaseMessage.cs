@@ -117,7 +117,7 @@ public abstract class BaseMessage : InterfaceMessage
     // If the component is not null, this is a reply
     public async Task<InterfaceMessage> CreateTheMessageAndItsButtonsOnTheBaseClass(
         InterfaceChannel _interfaceChannel, bool _embed,
-        bool _displayMessage = true, ulong _leagueCategoryId = 0,
+        bool _displayMessage = true, ulong _channelCategoryId = 0,
         SocketMessageComponent? _component = null, bool _ephemeral = true,
         params string[] _files)
     {
@@ -145,9 +145,9 @@ public abstract class BaseMessage : InterfaceMessage
             thisInterfaceMessage.MessageButtonNamesWithAmount.Count);
 
         // Generates either normal buttons, or custom amount of buttons with different properties
-        GenerateButtons(component, _leagueCategoryId);
+        GenerateButtons(component, _channelCategoryId);
 
-        messageForGenerating = "\n" + GenerateMessage(_leagueCategoryId).Result;
+        messageForGenerating = "\n" + GenerateMessage(_channelCategoryId).Result;
 
         if (_displayMessage)
         {
@@ -256,7 +256,7 @@ public abstract class BaseMessage : InterfaceMessage
 
     public async Task<InterfaceMessage> CreateTheMessageAndItsButtonsOnTheBaseClassWithAttachmentData(
         InterfaceChannel _interfaceChannel, AttachmentData[] _attachmentDatas,
-        bool _displayMessage = true, ulong _leagueCategoryId = 0,
+        bool _displayMessage = true, ulong _channelCategoryId = 0,
         SocketMessageComponent? _component = null, bool _ephemeral = true)
     {
         thisInterfaceMessage.MessageChannelId = _interfaceChannel.ChannelId;
@@ -412,8 +412,8 @@ public abstract class BaseMessage : InterfaceMessage
         ModifyMessage(GenerateMessage(_messageCategoryId).Result);
     }
 
-    protected abstract void GenerateButtons(ComponentBuilder _component, ulong _leagueCategoryId);
-    protected void GenerateRegularButtons(ComponentBuilder _component, ulong _leagueCategoryId)
+    protected abstract void GenerateButtons(ComponentBuilder _component, ulong _channelCategoryId);
+    protected void GenerateRegularButtons(ComponentBuilder _component, ulong _channelCategoryId)
     {
         foreach (var buttonNameWithAmount in thisInterfaceMessage.MessageButtonNamesWithAmount)
         {
@@ -436,7 +436,7 @@ public abstract class BaseMessage : InterfaceMessage
                 Log.WriteLine(nameof(finalCustomId) + ": " + finalCustomId, LogLevel.DEBUG);
 
                 _component.WithButton(interfaceButton.CreateTheButton(
-                    finalCustomId, b, thisInterfaceMessage.MessageCategoryId, _leagueCategoryId));
+                    finalCustomId, b, thisInterfaceMessage.MessageCategoryId, _channelCategoryId));
 
                 thisInterfaceMessage.ButtonsInTheMessage.Add(interfaceButton);
             }
@@ -446,7 +446,7 @@ public abstract class BaseMessage : InterfaceMessage
     // CustomID, Label and the type to generate from the inherited class
     protected void GenerateButtonsWithCustomPropertiesAndIds(
         Dictionary<string, string> _buttonsToGenerate, ButtonName _buttonTypeToGenerate,
-        ComponentBuilder _component, ulong _leagueCategoryId)
+        ComponentBuilder _component, ulong _channelCategoryId)
     {
         Log.WriteLine("buttons to generate count:" + _buttonsToGenerate);
 
@@ -464,7 +464,7 @@ public abstract class BaseMessage : InterfaceMessage
                 buttonToGenerateKvp.Key, LogLevel.DEBUG);
 
             _component.WithButton(interfaceButton.CreateTheButton(
-                buttonToGenerateKvp.Key, ++buttonId, thisInterfaceMessage.MessageCategoryId, _leagueCategoryId));
+                buttonToGenerateKvp.Key, ++buttonId, thisInterfaceMessage.MessageCategoryId, _channelCategoryId));
 
             thisInterfaceMessage.ButtonsInTheMessage.Add(interfaceButton);
         }

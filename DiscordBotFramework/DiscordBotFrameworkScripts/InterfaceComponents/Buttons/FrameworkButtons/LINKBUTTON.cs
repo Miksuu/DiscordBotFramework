@@ -16,7 +16,7 @@ public class LINKBUTTON : BaseButton
         ephemeralResponse = true;
     }
 
-    protected override string GenerateCustomButtonProperties(int _buttonIndex, ulong _leagueCategoryId)
+    protected override string GenerateCustomButtonProperties(int _buttonIndex, ulong _channelCategoryId)
     {
         return "";
     }

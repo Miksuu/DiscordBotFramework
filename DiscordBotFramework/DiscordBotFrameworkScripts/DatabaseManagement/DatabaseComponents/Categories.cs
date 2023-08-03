@@ -116,13 +116,13 @@ public class Categories
     }
 
     public async Task<string> GetMessageJumpUrl(
-    ulong _leagueCategoryId, ulong _channelId, MessageName _messageName)
+    ulong _channelCategoryId, ulong _channelId, MessageName _messageName)
     {
-        Log.WriteLine("Getting jump URL with: " + _leagueCategoryId +
+        Log.WriteLine("Getting jump URL with: " + _channelCategoryId +
             " | " + _channelId + " | " + _messageName);
 
         var messageToFind = DiscordBotDatabase.Instance.Categories.FindInterfaceCategoryWithCategoryId(
-            _leagueCategoryId).FindInterfaceChannelWithIdInTheCategory(
+            _channelCategoryId).FindInterfaceChannelWithIdInTheCategory(
                 _channelId).FindInterfaceMessageWithNameInTheChannel(
                     _messageName);
         var client = BotReference.GetClientRef();
