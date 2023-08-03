@@ -243,7 +243,8 @@ public abstract class BaseChannel : InterfaceChannel
                 InterfaceMessage interfaceMessage =
                     (InterfaceMessage)EnumExtensions.GetInstance(thisInterfaceChannel.ChannelMessages.ElementAt(m).Key.ToString());
 
-                await interfaceMessage.CreateTheMessageAndItsButtonsOnTheBaseClass(this, true, true);
+                await interfaceMessage.CreateTheMessageAndItsButtonsOnTheBaseClass(
+                    this, true, true, thisInterfaceChannel.ChannelsCategoryId);
                 thisInterfaceChannel.ChannelMessages[thisInterfaceChannel.ChannelMessages.ElementAt(m).Key] = true;
             }
         }
