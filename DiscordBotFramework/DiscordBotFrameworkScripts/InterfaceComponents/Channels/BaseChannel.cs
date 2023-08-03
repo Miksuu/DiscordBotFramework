@@ -69,7 +69,7 @@ public abstract class BaseChannel : InterfaceChannel
 
         if (thisInterfaceChannel.ChannelName == null)
         {
-            Log.WriteLine("thisInterfaceChannel.ChannelName was null!", LogLevel.CRITICAL);
+            Log.WriteLine("thisInterfaceChannel.ChannelName was null!", LogLevel.ERROR);
             return;
         }
 
@@ -104,7 +104,7 @@ public abstract class BaseChannel : InterfaceChannel
 
         if (thisInterfaceChannel.ChannelName == null)
         {
-            Log.WriteLine("thisInterfaceChannel.ChannelName was null!", LogLevel.CRITICAL);
+            Log.WriteLine("thisInterfaceChannel.ChannelName was null!", LogLevel.ERROR);
             return;
         }
 
@@ -155,7 +155,7 @@ public abstract class BaseChannel : InterfaceChannel
         var rawMessageInput = interfaceMessage as RAWMESSAGEINPUT;
         if (rawMessageInput == null)
         {
-            Log.WriteLine(nameof(rawMessageInput) + " was null!", LogLevel.CRITICAL);
+            Log.WriteLine(nameof(rawMessageInput) + " was null!", LogLevel.ERROR);
             throw new InvalidOperationException(nameof(rawMessageInput) + " was null!");
         }
 
@@ -189,7 +189,7 @@ public abstract class BaseChannel : InterfaceChannel
         var rawMessageInput = interfaceMessage as RAWMESSAGEINPUT;
         if (rawMessageInput == null)
         {
-            Log.WriteLine(nameof(rawMessageInput) + " was null!", LogLevel.CRITICAL);
+            Log.WriteLine(nameof(rawMessageInput) + " was null!", LogLevel.ERROR);
             return interfaceMessage;
         }
 
@@ -220,14 +220,14 @@ public abstract class BaseChannel : InterfaceChannel
         var channel = client.GetChannelAsync(thisInterfaceChannel.ChannelId).Result as ITextChannel;
         if (channel == null)
         {
-            Log.WriteLine(nameof(channel) + " was null!", LogLevel.CRITICAL);
+            Log.WriteLine(nameof(channel) + " was null!", LogLevel.ERROR);
             return;
         }
 
         var channelMessagesFromDb = await channel.GetMessagesAsync(50, CacheMode.AllowDownload).FirstOrDefaultAsync();
         if (channelMessagesFromDb == null)
         {
-            Log.WriteLine(nameof(channelMessagesFromDb) + " was null!", LogLevel.CRITICAL);
+            Log.WriteLine(nameof(channelMessagesFromDb) + " was null!", LogLevel.ERROR);
             return;
         }
 
@@ -266,7 +266,7 @@ public abstract class BaseChannel : InterfaceChannel
         if (interfaceMessage == null)
         {
             string errorMsg = nameof(interfaceMessage) + " was null! with name: " + _messageName;
-            Log.WriteLine(errorMsg, LogLevel.CRITICAL);
+            Log.WriteLine(errorMsg, LogLevel.ERROR);
             throw new InvalidOperationException(errorMsg);
         }
 
@@ -284,7 +284,7 @@ public abstract class BaseChannel : InterfaceChannel
         if (interfaceMessage == null)
         {
             string errorMsg = nameof(interfaceMessage) + " was null! with id: " + _messageId;
-            Log.WriteLine(errorMsg, LogLevel.CRITICAL);
+            Log.WriteLine(errorMsg, LogLevel.ERROR);
             throw new InvalidOperationException(errorMsg);
         }
 
@@ -311,7 +311,7 @@ public abstract class BaseChannel : InterfaceChannel
         if (interfaceMessage == null)
         {
             string errorMsg = nameof(interfaceMessage) + " was null! with name: " + _messageName;
-            Log.WriteLine(errorMsg, LogLevel.CRITICAL);
+            Log.WriteLine(errorMsg, LogLevel.ERROR);
             throw new InvalidOperationException(errorMsg);
         }
 
@@ -332,7 +332,7 @@ public abstract class BaseChannel : InterfaceChannel
             x => x.Value.MessageName == _messageName);
         if (foundInterfaceMessages == null)
         {
-            Log.WriteLine(nameof(foundInterfaceMessages) + " was null!", LogLevel.CRITICAL);
+            Log.WriteLine(nameof(foundInterfaceMessages) + " was null!", LogLevel.ERROR);
             throw new InvalidOperationException(nameof(foundInterfaceMessages) + " was null!");
         }
 
@@ -391,7 +391,7 @@ public abstract class BaseChannel : InterfaceChannel
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+                    Log.WriteLine(ex.Message, LogLevel.ERROR);
                     continue;
                 }
 
@@ -408,7 +408,7 @@ public abstract class BaseChannel : InterfaceChannel
         }
         catch (Exception ex)
         {
-            Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+            Log.WriteLine(ex.Message, LogLevel.ERROR);
             return ex.Message;
         }
 
@@ -433,7 +433,7 @@ public abstract class BaseChannel : InterfaceChannel
                 c.Name.Contains(_nameMustContain)); // Just in case
         if (channel == null)
         {
-            Log.WriteLine(nameof(channel) + " was null!", LogLevel.CRITICAL);
+            Log.WriteLine(nameof(channel) + " was null!", LogLevel.ERROR);
             return;
         }
 
@@ -478,7 +478,7 @@ public abstract class BaseChannel : InterfaceChannel
         }
         catch (Exception ex)
         {
-            Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+            Log.WriteLine(ex.Message, LogLevel.ERROR);
             throw new InvalidOperationException(ex.Message);
         }
     }

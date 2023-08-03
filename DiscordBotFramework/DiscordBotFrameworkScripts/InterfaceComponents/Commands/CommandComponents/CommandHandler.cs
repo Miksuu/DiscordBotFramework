@@ -18,7 +18,7 @@ public static class CommandHandler
         }
         catch (Exception ex)
         {
-            Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+            Log.WriteLine(ex.Message, LogLevel.ERROR);
             throw new InvalidOperationException(ex.Message);
         }
     }
@@ -69,7 +69,7 @@ public static class CommandHandler
                 return;
             }
 
-            Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+            Log.WriteLine(ex.Message, LogLevel.ERROR);
             return;
         }
     }
@@ -92,7 +92,7 @@ public static class CommandHandler
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+                    Log.WriteLine(ex.Message, LogLevel.ERROR);
                     continue;
                 }
             }
@@ -100,7 +100,7 @@ public static class CommandHandler
         }
         catch (Exception ex)
         {
-            Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+            Log.WriteLine(ex.Message, LogLevel.ERROR);
             throw new InvalidOperationException(ex.Message);
         }
     }
@@ -114,7 +114,7 @@ public static class CommandHandler
         }
         catch (Exception ex)
         {
-            Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+            Log.WriteLine(ex.Message, LogLevel.ERROR);
             throw new InvalidOperationException(ex.Message);
         }
     }

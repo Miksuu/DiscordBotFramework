@@ -71,7 +71,7 @@ public abstract class BaseCategory : InterfaceCategory
         }
         catch (Exception ex)
         {
-            Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+            Log.WriteLine(ex.Message, LogLevel.ERROR);
             throw new InvalidOperationException(ex.Message);
         }
 
@@ -315,7 +315,7 @@ public abstract class BaseCategory : InterfaceCategory
         if (interfaceChannel == null)
         {
             string errorMsg = nameof(interfaceChannel) + " was null! with id: " + _idToSearchWith;
-            Log.WriteLine(errorMsg, LogLevel.CRITICAL);
+            Log.WriteLine(errorMsg, LogLevel.ERROR);
             throw new InvalidOperationException(errorMsg);
         }
 
@@ -333,7 +333,7 @@ public abstract class BaseCategory : InterfaceCategory
         if (interfaceChannel == null)
         {
             string errorMsg = nameof(interfaceChannel) + " was null! with name: " + _nameToSearchWith;
-            Log.WriteLine(errorMsg, LogLevel.CRITICAL);
+            Log.WriteLine(errorMsg, LogLevel.ERROR);
             throw new InvalidOperationException(errorMsg);
         }
         Log.WriteLine("Found: " + interfaceChannel.ChannelName);
@@ -367,7 +367,7 @@ public abstract class BaseCategory : InterfaceCategory
         }
         catch (Exception ex)
         {
-            Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+            Log.WriteLine(ex.Message, LogLevel.ERROR);
             throw new InvalidOperationException(ex.Message);
         }
     }

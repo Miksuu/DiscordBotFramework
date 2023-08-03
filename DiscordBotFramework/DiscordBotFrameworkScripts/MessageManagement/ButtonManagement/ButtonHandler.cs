@@ -28,7 +28,7 @@ public static class ButtonHandler
                 return;
             }
 
-            Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+            Log.WriteLine(ex.Message, LogLevel.ERROR);
             return;
         }
     }

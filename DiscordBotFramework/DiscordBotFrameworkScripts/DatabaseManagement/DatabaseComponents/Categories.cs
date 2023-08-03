@@ -25,7 +25,7 @@ public class Categories
         if (interfaceCategory == null)
         {
             string errorMsg = nameof(interfaceCategory) + " was null! with id: " + _categoryIdToSearchWith;
-            Log.WriteLine(errorMsg, LogLevel.CRITICAL);
+            Log.WriteLine(errorMsg, LogLevel.ERROR);
             throw new InvalidOperationException(errorMsg);
         }
         Log.WriteLine("Found: " + interfaceCategory.CategoryType);
@@ -39,7 +39,7 @@ public class Categories
         if (!exists)
         {
             Log.WriteLine(nameof(InterfaceCategory) + " did not exist! with id: " +
-                _categoryIdToSearchWith, LogLevel.CRITICAL);
+                _categoryIdToSearchWith, LogLevel.ERROR);
 
             return false;
         }
@@ -55,7 +55,7 @@ public class Categories
         if (interfaceCategory == null)
         {
             string errorMsg = nameof(interfaceCategory) + " was null! with channel id: " + _channelId;
-            Log.WriteLine(errorMsg, LogLevel.CRITICAL);
+            Log.WriteLine(errorMsg, LogLevel.ERROR);
             throw new InvalidOperationException(errorMsg);
         }
         Log.WriteLine("Found: " + interfaceCategory.CategoryType);
@@ -70,7 +70,7 @@ public class Categories
                 x => x.Value.CategoryType == _categoryType).Value;
         if (interfaceCategory == null)
         {
-            Log.WriteLine(nameof(interfaceCategory) + " was null!", LogLevel.CRITICAL);
+            Log.WriteLine(nameof(interfaceCategory) + " was null!", LogLevel.ERROR);
             throw new InvalidOperationException("InterfaceCategory not found for the given id.");
         }
 
@@ -92,7 +92,7 @@ public class Categories
         }
         catch (Exception ex)
         {
-            Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+            Log.WriteLine(ex.Message, LogLevel.ERROR);
             throw new InvalidOperationException(ex.Message);
         }
     }

@@ -135,7 +135,7 @@ public abstract class BaseMessage : InterfaceMessage
         var textChannel = await client.GetChannelAsync(thisInterfaceMessage.MessageChannelId) as ITextChannel;
         if (textChannel == null)
         {
-            Log.WriteLine(nameof(textChannel) + " was null!", LogLevel.CRITICAL);
+            Log.WriteLine(nameof(textChannel) + " was null!", LogLevel.ERROR);
             throw new InvalidOperationException(nameof(textChannel) + " was null!");
         }
 
@@ -162,7 +162,7 @@ public abstract class BaseMessage : InterfaceMessage
                 //    MatchChannelComponents mcc = new MatchChannelComponents(this);
                 //    if (mcc.interfaceLeagueCached == null || mcc.leagueMatchCached == null)
                 //    {
-                //        Log.WriteLine(nameof(mcc) + " was null!", LogLevel.CRITICAL);
+                //        Log.WriteLine(nameof(mcc) + " was null!", LogLevel.ERROR);
                 //        throw new InvalidOperationException(nameof(mcc) + " was null!");
                 //    }
 
@@ -273,7 +273,7 @@ public abstract class BaseMessage : InterfaceMessage
         var textChannel = await client.GetChannelAsync(thisInterfaceMessage.MessageChannelId) as ITextChannel;
         if (textChannel == null)
         {
-            Log.WriteLine(nameof(textChannel) + " was null!", LogLevel.CRITICAL);
+            Log.WriteLine(nameof(textChannel) + " was null!", LogLevel.ERROR);
             return this;
         }
 
@@ -299,7 +299,7 @@ public abstract class BaseMessage : InterfaceMessage
             LINKBUTTON? linkButton = interfaceButton as LINKBUTTON;
             if (linkButton == null)
             {
-                Log.WriteLine(nameof(linkButton) + " was null!", LogLevel.CRITICAL);
+                Log.WriteLine(nameof(linkButton) + " was null!", LogLevel.ERROR);
                 throw new InvalidOperationException(nameof(linkButton) + " was null!");
             }
 
@@ -368,7 +368,7 @@ public abstract class BaseMessage : InterfaceMessage
             var channel = await client.GetChannelAsync(thisInterfaceMessage.MessageChannelId) as ITextChannel;
             if (channel == null)
             {
-                Log.WriteLine(nameof(channel) + " was null!", LogLevel.CRITICAL);
+                Log.WriteLine(nameof(channel) + " was null!", LogLevel.ERROR);
                 return;
             }
 
@@ -390,7 +390,7 @@ public abstract class BaseMessage : InterfaceMessage
         }
         catch (Exception ex)
         {
-            Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+            Log.WriteLine(ex.Message, LogLevel.ERROR);
             throw;
         }
     }
@@ -495,7 +495,7 @@ public abstract class BaseMessage : InterfaceMessage
             b => b.ButtonCustomId == _componentDataCustomId);
         if (foundButton == null)
         {
-            Log.WriteLine(nameof(foundButton) + " was null", LogLevel.CRITICAL);
+            Log.WriteLine(nameof(foundButton) + " was null", LogLevel.ERROR);
             throw new InvalidOperationException(nameof(foundButton) + " was null!");
         }
 

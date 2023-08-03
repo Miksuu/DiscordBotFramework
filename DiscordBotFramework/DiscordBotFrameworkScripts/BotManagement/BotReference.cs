@@ -42,7 +42,7 @@ public class BotReference
         if (clientRef == null)
         {
             string errorMessage = "ClientRef was null!";
-            Log.WriteLine(errorMessage, LogLevel.CRITICAL);
+            Log.WriteLine(errorMessage, LogLevel.ERROR);
             throw new InvalidOperationException(errorMessage);
         }
         return clientRef;

@@ -10,7 +10,7 @@ public static class EnumExtensions
 
         if (t == null)
         {
-            Log.WriteLine("type was null for: " + _string.ToUpper(), LogLevel.CRITICAL);
+            Log.WriteLine("type was null for: " + _string.ToUpper(), LogLevel.ERROR);
             throw new InvalidOperationException("type was null for: " + _string.ToUpper());
         }
         Log.WriteLine("Generated type: " + t);
@@ -18,7 +18,7 @@ public static class EnumExtensions
         var instance = Activator.CreateInstance(t);
         if (instance == null)
         {
-            Log.WriteLine("instance was null for: " + _string.ToUpper(), LogLevel.CRITICAL);
+            Log.WriteLine("instance was null for: " + _string.ToUpper(), LogLevel.ERROR);
             throw new InvalidOperationException("instance was null for: " + _string.ToUpper());
         }
         Log.WriteLine("Generated instance: " + instance);
@@ -54,13 +54,13 @@ public static class EnumExtensions
 
         if (attr == null)
         {
-            Log.WriteLine("attr was null!", LogLevel.CRITICAL);
+            Log.WriteLine("attr was null!", LogLevel.ERROR);
             return "null";
         }
 
         if (attr.Value == null)
         {
-            Log.WriteLine("attr.value was null!", LogLevel.CRITICAL);
+            Log.WriteLine("attr.value was null!", LogLevel.ERROR);
             return "null";
         }
         Log.WriteLine("returning attr.value: " + attr.Value);

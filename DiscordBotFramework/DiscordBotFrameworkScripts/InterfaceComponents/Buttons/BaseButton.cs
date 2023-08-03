@@ -147,7 +147,7 @@ public abstract class BaseButton : InterfaceButton
                 return;
             }
 
-            Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+            Log.WriteLine(ex.Message, LogLevel.ERROR);
             return;
         }
     }

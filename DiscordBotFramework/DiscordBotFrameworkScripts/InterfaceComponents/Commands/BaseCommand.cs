@@ -88,7 +88,7 @@ public abstract class BaseCommand : InterfaceCommand
     {
         if (commandOption == null)
         {
-            Log.WriteLine(nameof(commandOption) + " was null!", LogLevel.CRITICAL);
+            Log.WriteLine(nameof(commandOption) + " was null!", LogLevel.ERROR);
             return;
         }
 

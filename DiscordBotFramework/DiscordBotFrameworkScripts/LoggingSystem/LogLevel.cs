@@ -1,13 +1,12 @@
 ﻿public enum LogLevel
 {
-    CRITICAL = 0,
-    ERROR = 1,
-    WARNING = 2,
-    IMPORTANT = 3,
-    SERIALIZATION = 4,
-    DEBUG = 5,
-    ADD_VERBOSE = 6,
-    SET_VERBOSE = 7,
-    GET_VERBOSE = 8,
-    VERBOSE = 9,
+    ERROR = 0,
+    WARNING = 1,
+    IMPORTANT = 2,
+    SERIALIZATION = 3,
+    DEBUG = 4,
+    ADD_VERBOSE = 5,
+    SET_VERBOSE = 6,
+    GET_VERBOSE = 7,
+    VERBOSE = 8,
 }

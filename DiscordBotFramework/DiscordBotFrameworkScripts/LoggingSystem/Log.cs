@@ -46,7 +46,6 @@ public static class Log
     {        
         switch (_logLevel)
         {
-            case (LogLevel.CRITICAL): return Color.DarkRed;
             case (LogLevel.ERROR): return Color.Red;
             case (LogLevel.WARNING): return Color.Orange;
             case (LogLevel.IMPORTANT): return Color.Gold;

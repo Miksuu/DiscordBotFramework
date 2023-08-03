@@ -123,7 +123,7 @@ public static class FileManager
 
         if (string.IsNullOrEmpty(fileType))
         {
-            Log.WriteLine("FileType was null or empty!", LogLevel.CRITICAL);
+            Log.WriteLine("FileType was null or empty!", LogLevel.ERROR);
             return "";
         }
 

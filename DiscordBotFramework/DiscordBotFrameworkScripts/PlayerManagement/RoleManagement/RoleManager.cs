@@ -13,7 +13,7 @@ public static class RoleManager
         var roles = guild.Roles.FirstOrDefault(r => r.Id == _roleId);
         if (roles == null)
         {
-            Log.WriteLine(nameof(roles) + " was null!", LogLevel.CRITICAL);
+            Log.WriteLine(nameof(roles) + " was null!", LogLevel.ERROR);
             return Task.FromResult("");
         }
 
@@ -35,14 +35,14 @@ public static class RoleManager
         var user = guild.GetUser(_playerId) as IGuildUser;
         if (user == null)
         {
-            Log.WriteLine("User with id: " + _playerId + " was null!", LogLevel.CRITICAL);
+            Log.WriteLine("User with id: " + _playerId + " was null!", LogLevel.ERROR);
             return;
         }
 
         var role = guild.Roles.FirstOrDefault(x => x.Name == _roleName);
         if (role == null)
         {
-            Log.WriteLine("Role " + _roleName + "was null!", LogLevel.CRITICAL);
+            Log.WriteLine("Role " + _roleName + "was null!", LogLevel.ERROR);
             return;
         }
 
@@ -67,14 +67,14 @@ public static class RoleManager
         var user = guild.GetUser(_playerId) as IGuildUser;
         if (user == null)
         {
-            Log.WriteLine("User with id: " + _playerId + " was null!", LogLevel.CRITICAL);
+            Log.WriteLine("User with id: " + _playerId + " was null!", LogLevel.ERROR);
             return;
         }
 
         var role = guild.Roles.FirstOrDefault(x => x.Name == _roleName);
         if (role == null)
         {
-            Log.WriteLine("Role " + _roleName + "was null!", LogLevel.CRITICAL);
+            Log.WriteLine("Role " + _roleName + "was null!", LogLevel.ERROR);
             return;
         }
 

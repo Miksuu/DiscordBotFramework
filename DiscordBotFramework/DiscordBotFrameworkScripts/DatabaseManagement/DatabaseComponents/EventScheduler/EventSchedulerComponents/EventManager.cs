@@ -27,7 +27,7 @@ public class EventManager
         }
         catch (Exception ex)
         {
-            Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+            Log.WriteLine(ex.Message, LogLevel.ERROR);
             throw new InvalidOperationException(ex.Message);
         }
     }
@@ -43,7 +43,7 @@ public class EventManager
         }
         catch (Exception ex)
         {
-            Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+            Log.WriteLine(ex.Message, LogLevel.ERROR);
             throw new InvalidOperationException(ex.Message);
         }
     }
@@ -56,26 +56,26 @@ public class EventManager
 
             if (ClassScheduledEvents == null)
             {
-                Log.WriteLine("ClassScheduledEvents is null.", LogLevel.CRITICAL);
+                Log.WriteLine("ClassScheduledEvents is null.", LogLevel.ERROR);
                 throw new InvalidOperationException("ClassScheduledEvents is null.");
             }
 
             if (_eventType == null)
             {
-                Log.WriteLine("eventType is null.", LogLevel.CRITICAL);
+                Log.WriteLine("eventType is null.", LogLevel.ERROR);
                 throw new ArgumentNullException(nameof(_eventType));
             }
 
             if (!typeof(ScheduledEvent).IsAssignableFrom(_eventType))
             {
-                Log.WriteLine("eventType is not a ScheduledEvent.", LogLevel.CRITICAL);
+                Log.WriteLine("eventType is not a ScheduledEvent.", LogLevel.ERROR);
                 throw new ArgumentException("eventType is not a ScheduledEvent.");
             }
 
             ScheduledEvent? eventOfType = ClassScheduledEvents.FirstOrDefault(e => e.GetType() == _eventType);
             if (eventOfType == null)
             {
-                Log.WriteLine($"Event of type {_eventType.Name} does not exist in ClassScheduledEvents.", LogLevel.CRITICAL);
+                Log.WriteLine($"Event of type {_eventType.Name} does not exist in ClassScheduledEvents.", LogLevel.ERROR);
                 throw new InvalidOperationException($"Event of type {_eventType.Name} does not exist in ClassScheduledEvents.");
             }
 
@@ -84,7 +84,7 @@ public class EventManager
         }
         catch (Exception ex)
         {
-            Log.WriteLine("Error in GetEventByType: " + ex.Message, LogLevel.CRITICAL);
+            Log.WriteLine("Error in GetEventByType: " + ex.Message, LogLevel.ERROR);
             throw new InvalidOperationException(ex.Message);
         }
     }
@@ -96,19 +96,19 @@ public class EventManager
             Log.WriteLine("Getting list of events by type: " + _eventType, LogLevel.DEBUG);
             if (ClassScheduledEvents == null)
             {
-                Log.WriteLine("ClassScheduledEvents is null.", LogLevel.CRITICAL);
+                Log.WriteLine("ClassScheduledEvents is null.", LogLevel.ERROR);
                 throw new InvalidOperationException("ClassScheduledEvents is null.");
             }
 
             if (_eventType == null)
             {
-                Log.WriteLine("eventType is null.", LogLevel.CRITICAL);
+                Log.WriteLine("eventType is null.", LogLevel.ERROR);
                 throw new ArgumentNullException(nameof(_eventType));
             }
 
             if (!typeof(ScheduledEvent).IsAssignableFrom(_eventType))
             {
-                Log.WriteLine("eventType is not a ScheduledEvent.", LogLevel.CRITICAL);
+                Log.WriteLine("eventType is not a ScheduledEvent.", LogLevel.ERROR);
                 throw new ArgumentException("eventType is not a ScheduledEvent.");
             }
 
@@ -116,7 +116,7 @@ public class EventManager
 
             if (eventsOfType.Count == 0)
             {
-                Log.WriteLine($"No events of type {_eventType.Name} exist in ClassScheduledEvents.", LogLevel.CRITICAL);
+                Log.WriteLine($"No events of type {_eventType.Name} exist in ClassScheduledEvents.", LogLevel.ERROR);
                 throw new InvalidOperationException($"No events of type {_eventType.Name} exist in ClassScheduledEvents.");
             }
 
@@ -125,7 +125,7 @@ public class EventManager
         }
         catch (Exception ex)
         {
-            Log.WriteLine("Error in GetEventsByType: " + ex.Message, LogLevel.CRITICAL);
+            Log.WriteLine("Error in GetEventsByType: " + ex.Message, LogLevel.ERROR);
             throw new InvalidOperationException(ex.Message);
         }
     }
@@ -156,7 +156,7 @@ public class EventManager
                     var scheduledEventToRemove = ClassScheduledEvents.FirstOrDefault(e => e.EventId == scheduledEvent.EventId);
                     if (scheduledEventToRemove == null)
                     {
-                        Log.WriteLine("scheduledEventToRemove is null.", LogLevel.CRITICAL);
+                        Log.WriteLine("scheduledEventToRemove is null.", LogLevel.ERROR);
                         throw new InvalidOperationException("scheduledEventToRemove is null.");
                     }
 
@@ -166,14 +166,14 @@ public class EventManager
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+                    Log.WriteLine(ex.Message, LogLevel.ERROR);
                     continue;
                 }
             }
         }
         catch (Exception ex)
         {
-            Log.WriteLine("Error in HandleEvents: " + ex.Message, LogLevel.CRITICAL);
+            Log.WriteLine("Error in HandleEvents: " + ex.Message, LogLevel.ERROR);
             throw new InvalidOperationException(ex.Message);
         }
     }
@@ -202,7 +202,7 @@ public class EventManager
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+                    Log.WriteLine(ex.Message, LogLevel.ERROR);
                     throw new InvalidOperationException(ex.Message);
                 }
             }
@@ -222,7 +222,7 @@ public class EventManager
         }
         catch (Exception ex)
         {
-            Log.WriteLine(ex.Message, LogLevel.CRITICAL);
+            Log.WriteLine(ex.Message, LogLevel.ERROR);
             throw new InvalidOperationException(ex.Message);
         }
     }
@@ -236,7 +236,7 @@ public class EventManager
 
             if (ClassScheduledEvents == null)
             {
-                Log.WriteLine("ClassScheduledEvents is null.", LogLevel.CRITICAL);
+                Log.WriteLine("ClassScheduledEvents is null.", LogLevel.ERROR);
                 throw new InvalidOperationException("ClassScheduledEvents is null.");
             }
 
@@ -256,7 +256,7 @@ public class EventManager
                     ClassScheduledEvents.TryTake(out eventToRemove);
                     if (eventToRemove == null)
                     {
-                        Log.WriteLine("eventToRemove is null.", LogLevel.CRITICAL);
+                        Log.WriteLine("eventToRemove is null.", LogLevel.ERROR);
                         throw new InvalidOperationException("eventToRemove is null.");
                     }
 
@@ -264,7 +264,7 @@ public class EventManager
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteLine("Error in ClearCertainTypeOfEventsFromTheList forloop: " + ex.Message, LogLevel.CRITICAL);
+                    Log.WriteLine("Error in ClearCertainTypeOfEventsFromTheList forloop: " + ex.Message, LogLevel.ERROR);
                     throw new InvalidOperationException("Error in ClearCertainTypeOfEventsFromTheList forloop: " + ex.Message);
                 }
             }
@@ -273,7 +273,7 @@ public class EventManager
         }
         catch (Exception ex)
         {
-            Log.WriteLine("Error in ClearCertainTypeOfEventsFromTheList: " + ex.Message, LogLevel.CRITICAL);
+            Log.WriteLine("Error in ClearCertainTypeOfEventsFromTheList: " + ex.Message, LogLevel.ERROR);
             throw new InvalidOperationException("Error in ClearCertainTypeOfEventsFromTheList: " + ex.Message);
         }
     }
