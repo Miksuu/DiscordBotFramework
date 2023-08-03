@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using System.Data;
 
 // Reference to the bot's client/guild reference variable
 public class BotReference
