@@ -9,7 +9,7 @@ public static class DevTools
     public async static Task DeleteAllCategoriesChannelsAndRoles()
     {
         await DeleteCategories(new List<string> { "main-category" });
-        await DeleteChannels(new List<string> { "info", "test", "main-category" });
+        await DeleteChannels(new List<string> { "info", "test", "main-category", "development-activity" });
 
         FileManager.DeleteDirectoryIfItExists(Log.logsPath);
 
