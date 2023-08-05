@@ -19,4 +19,9 @@ public class BOTCOMMANDS : BaseChannel
         {
         };
     }
+
+    public override Task<bool> HandleChannelSpecificGenerationBehaviour()
+    {
+        return Task.FromResult(false);
+    }
 }

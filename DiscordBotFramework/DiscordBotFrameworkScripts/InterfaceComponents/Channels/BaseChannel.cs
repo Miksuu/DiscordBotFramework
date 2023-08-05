@@ -243,8 +243,13 @@ public abstract class BaseChannel : InterfaceChannel
                 InterfaceMessage interfaceMessage =
                     (InterfaceMessage)EnumExtensions.GetInstance(thisInterfaceChannel.ChannelMessages.ElementAt(m).Key.ToString());
 
+                if (HandleChannelSpecificGenerationBehaviour().Result)
+                {
+                    continue;
+                }
+
                 await interfaceMessage.CreateTheMessageAndItsButtonsOnTheBaseClass(
-                    this, true, true, thisInterfaceChannel.ChannelsCategoryId);
+                    thisInterfaceChannel, true, true, thisInterfaceChannel.ChannelsCategoryId);
                 thisInterfaceChannel.ChannelMessages[thisInterfaceChannel.ChannelMessages.ElementAt(m).Key] = true;
             }
         }
@@ -255,6 +260,8 @@ public abstract class BaseChannel : InterfaceChannel
         }
 
     }
+
+    public abstract Task<bool> HandleChannelSpecificGenerationBehaviour();
 
     // Finds ANY MessageDescription with that MessageDescription name (there can be multiple of same messages now)
     public InterfaceMessage FindInterfaceMessageWithNameInTheChannel(

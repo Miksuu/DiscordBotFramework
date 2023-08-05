@@ -25,4 +25,9 @@ public class BOTLOG : BaseChannel
         Log.WriteLine("Setting logging channel id with: " + channelId);
         return Task.CompletedTask;
     }*/
+
+    public override Task<bool> HandleChannelSpecificGenerationBehaviour()
+    {
+        return Task.FromResult(false);
+    }
 }

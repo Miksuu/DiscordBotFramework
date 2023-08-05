@@ -30,6 +30,8 @@ public interface InterfaceChannel
         SocketMessageComponent? _component = null, bool _ephemeral = true);
 
     public Task PostChannelMessages();
+    public Task<bool> HandleChannelSpecificGenerationBehaviour();
+
     public InterfaceMessage FindInterfaceMessageWithNameInTheChannel(
         MessageName _messageName);
 
