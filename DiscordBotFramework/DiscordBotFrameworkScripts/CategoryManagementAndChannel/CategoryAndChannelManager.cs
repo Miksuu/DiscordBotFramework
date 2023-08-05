@@ -24,7 +24,7 @@ public static class CategoryAndChannelManager
             try
             {
                 Log.WriteLine("Looping on category name: " + categoryName);
-                await GenerateCategory(categoryName, categoryName);
+                await GenerateCategoryAndItsChannels(categoryName, categoryName);
             }
             catch (Exception ex)
             {
@@ -36,7 +36,7 @@ public static class CategoryAndChannelManager
         Log.WriteLine("Done generating RegularCategories", LogLevel.DEBUG);
     }
 
-    private static async Task GenerateCategory(CategoryType _categoryType, Enum _categoryName)
+    private static async Task GenerateCategoryAndItsChannels(CategoryType _categoryType, Enum _categoryName)
     {
         try
         {
@@ -63,6 +63,43 @@ public static class CategoryAndChannelManager
             await interfaceCategory.CreateChannelsForTheCategory(socketCategoryChannelId, role);
 
             Log.WriteLine("Done with generating category: " + _categoryType + " with enum: " + _categoryName, LogLevel.DEBUG);
+        }
+        catch (Exception ex)
+        {
+            Log.WriteLine(ex.Message, LogLevel.ERROR);
+            throw new InvalidOperationException(ex.Message);
+        }
+    }
+
+    public static async Task<InterfaceCategory> GenerateCategoryWithoutItsChannels(CategoryType _categoryType, Enum _categoryName)
+    {
+        try
+        {
+            Log.WriteLine("Generating category named: " + _categoryType + " with enum: " + _categoryName, LogLevel.DEBUG);
+
+            InterfaceCategory interfaceCategory = GetCategoryInstance(_categoryType);
+
+            Log.WriteLine("interfaceCategory name: " + interfaceCategory.CategoryType, LogLevel.DEBUG);
+
+            string finalCategoryName = EnumExtensions.GetEnumMemberAttrValue(_categoryName);
+            Log.WriteLine("Category name is: " + finalCategoryName);
+
+            ulong socketCategoryChannelId = await FindLeagueAndCreateSocketCategoryChannelAndReturnId(interfaceCategory, finalCategoryName);
+
+            Log.WriteLine("id: " + socketCategoryChannelId);
+
+            SocketRole role = await RoleManager.CheckIfRoleExistsByNameAndCreateItIfItDoesntElseReturnIt(finalCategoryName);
+
+            if (DiscordBotDatabase.Instance.Categories.FindIfInterfaceCategoryExistsWithCategoryId(socketCategoryChannelId))
+            {
+                interfaceCategory = DiscordBotDatabase.Instance.Categories.FindInterfaceCategoryWithCategoryId(socketCategoryChannelId);
+            }
+
+            Log.WriteLine("Done with generating category: " + _categoryType + " with enum: " + _categoryName, LogLevel.DEBUG);
+
+            interfaceCategory.SocketCategoryChannelId = socketCategoryChannelId;
+
+            return interfaceCategory;
         }
         catch (Exception ex)
         {
@@ -141,7 +178,36 @@ public static class CategoryAndChannelManager
                 return socketCategoryChannelId;
             }
         }
-        catch (Exception ex) 
+        catch (Exception ex)
+        {
+            Log.WriteLine(ex.Message, LogLevel.ERROR);
+            throw new InvalidOperationException(ex.Message);
+        }
+    }
+
+    private async static Task<ulong> FindLeagueAndCreateSocketCategoryChannelAndReturnId(InterfaceCategory _interfaceCategory, string _finalCategoryName)
+    {
+        try
+        {
+            Log.WriteLine("Finding with: " + _interfaceCategory + "| final name:" + _finalCategoryName, LogLevel.DEBUG);
+
+            Log.WriteLine("false with: " + _interfaceCategory.CategoryType);
+
+            SocketRole role = await RoleManager.CheckIfRoleExistsByNameAndCreateItIfItDoesntElseReturnIt(_finalCategoryName);
+
+            Log.WriteLine("Role: " + role.Id + " | name: " + role.Name);
+
+            var socketCategoryChannelId =
+                await _interfaceCategory.CreateANewSocketCategoryChannelAndReturnItAsId(_finalCategoryName, role);
+
+            Log.WriteLine("found id: " + socketCategoryChannelId);
+
+            DiscordBotDatabase.Instance.Categories.AddToCreatedCategoryWithChannelWithUlongAndInterfaceCategory(socketCategoryChannelId, _interfaceCategory);
+
+            Log.WriteLine("Added, returning found id: " + socketCategoryChannelId, LogLevel.DEBUG);
+            return socketCategoryChannelId;
+        }
+        catch (Exception ex)
         {
             Log.WriteLine(ex.Message, LogLevel.ERROR);
             throw new InvalidOperationException(ex.Message);
