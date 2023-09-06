@@ -78,7 +78,7 @@ public static class RoleManager
             return;
         }
 
-        // Add the role to the user
+        // Remove the role from the user
         await user.RemoveRoleAsync(role);
 
         Log.WriteLine("Done revoking role " + _roleName + " from: " + _playerId);
