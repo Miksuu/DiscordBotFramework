@@ -104,11 +104,11 @@ public abstract class BaseCategory : InterfaceCategory
         foreach (ChannelType channelType in thisInterfaceCategory.ChannelTypes)
         {
             // Checks for missing match channels from the league category
-            if (channelType == ChannelType.MATCHCHANNEL)
-            {
-                //await CreateTheMissingMatchChannels(_client, thisInterfaceCategory.SocketCategoryChannelId);
-                continue;
-            }
+            //if (channelType == ChannelType.MATCHCHANNEL)
+            //{
+            //    //await CreateTheMissingMatchChannels(_client, thisInterfaceCategory.SocketCategoryChannelId);
+            //    continue;
+            //}
 
             try
             {
@@ -139,10 +139,6 @@ public abstract class BaseCategory : InterfaceCategory
         Log.WriteLine("Creating channel name: " + _channelType, LogLevel.DEBUG);
 
         var guild = BotReference.GetGuildRef();
-        if (guild == null)
-        {
-            throw new InvalidOperationException(Exceptions.BotGuildRefNull());
-        }
 
         InterfaceChannel interfaceChannel = GetChannelInstance(_channelType.ToString());
 
