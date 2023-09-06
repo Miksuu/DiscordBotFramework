@@ -43,9 +43,9 @@ public static class SerializationManager
                             sw.Close();
                         }
 
-                        FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.discordDbTempPathWithFileName, @"\database.tmp");
+                        FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.discordDataDirectory, @"\database.tmp");
                         FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.discordDataDirectory, @"\database.json");
-                        File.Replace(DiscordBotDatabase.discordDbTempPathWithFileName, DiscordBotDatabase.discordDataDirectory + ".json", null);
+                        File.Replace(DiscordBotDatabase.discordDbTempPathWithFileName, DiscordBotDatabase.discordDataDirectory + @"\database.json", null);
                     }
                     else
                     {
@@ -57,9 +57,9 @@ public static class SerializationManager
                             sw.Close();
                         }
 
-                        FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.dbTempPathWithFileName, @"\database.tmp");
+                        FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.applicationDataDirectory, @"\database.tmp");
                         FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.applicationDataDirectory, @"\database.json");
-                        File.Replace(DiscordBotDatabase.dbTempPathWithFileName, DiscordBotDatabase.applicationDataDirectory + ".json", null);
+                        File.Replace(DiscordBotDatabase.dbTempPathWithFileName, DiscordBotDatabase.applicationDataDirectory + @"\database.json", null);
                     }
                 }
                 catch (Exception ex)
