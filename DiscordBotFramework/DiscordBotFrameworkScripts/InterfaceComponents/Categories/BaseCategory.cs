@@ -115,6 +115,9 @@ public abstract class BaseCategory : InterfaceCategory
                 continue;
             }
         }
+
+        // Temp fix?
+        DiscordBotDatabase.Instance.Categories.FindInterfaceCategoryWithCategoryId(_socketCategoryChannelId).InterfaceChannels = InterfaceChannels;
     }
 
     public async Task<InterfaceChannel> CreateSpecificChannelFromChannelType(
