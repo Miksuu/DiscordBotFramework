@@ -19,12 +19,19 @@ public static class CategoryAndChannelManager
     {
         Log.WriteLine("Starting to generate RegularCategories", LogLevel.DEBUG);
 
-        foreach (CategoryType categoryName in Enum.GetValues(typeof(CategoryType)))
+        foreach (CategoryType categoryType in Enum.GetValues(typeof(CategoryType)))
         {
             try
             {
-                Log.WriteLine("Looping on category name: " + categoryName);
-                await GenerateCategoryAndItsChannels(categoryName, categoryName);
+                Log.WriteLine("Looping on category name: " + categoryType);
+
+                if (categoryType == CategoryType.LEAGUETEMPLATE)
+                {
+                    Log.WriteLine("skipped " + categoryType);
+                    continue;
+                }
+
+                await GenerateCategoryAndItsChannels(categoryType, categoryType);
             }
             catch (Exception ex)
             {
