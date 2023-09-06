@@ -280,50 +280,50 @@ public abstract class BaseCategory : InterfaceCategory
         return (InterfaceChannel)EnumExtensions.GetInstance(_channelType);
     }
 
-    private static Task CreateTheMissingMatchChannels(
-        DiscordSocketClient _client, ulong _socketCategoryChannelId)
-    {
-        InterfaceLeague interfaceLeague;
+    //private static Task CreateTheMissingMatchChannels(
+    //    DiscordSocketClient _client, ulong _socketCategoryChannelId)
+    //{
+    //    InterfaceLeague interfaceLeague;
 
-        Log.WriteLine("Checking for missing matches in: " + _socketCategoryChannelId);
+    //    Log.WriteLine("Checking for missing matches in: " + _socketCategoryChannelId);
 
-        try
-        {
-            interfaceLeague =
-                Database.Instance.Leagues.GetILeagueByCategoryId(_socketCategoryChannelId);
-        }
-        catch (Exception ex)
-        {
-            Log.WriteLine(ex.Message, LogLevel.ERROR);
-            return Task.CompletedTask;
-        }
+    //    try
+    //    {
+    //        interfaceLeague =
+    //            Database.Instance.Leagues.GetILeagueByCategoryId(_socketCategoryChannelId);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Log.WriteLine(ex.Message, LogLevel.ERROR);
+    //        return Task.CompletedTask;
+    //    }
 
-        Log.WriteLine("Found InterfaceLeague: " + interfaceLeague.LeagueCategoryName);
+    //    Log.WriteLine("Found InterfaceLeague: " + interfaceLeague.LeagueCategoryName);
 
-        Matches matches = interfaceLeague.LeagueData.Matches;
+    //    Matches matches = interfaceLeague.LeagueData.Matches;
 
-        /*
-        foreach (LeagueMatch match in matches. atchesConcurrentBag)
-        {
-            Log.WriteLine("Looping on match id: " + match.MatchId +
-                " with channelId: " + match.MatchChannelId);
+    //    /*
+    //    foreach (LeagueMatch match in matches. atchesConcurrentBag)
+    //    {
+    //        Log.WriteLine("Looping on match id: " + match.MatchId +
+    //            " with channelId: " + match.MatchChannelId);
 
-            var matchChannel = _client.GetChannelAsync(match.MatchChannelId).Result as ITextChannel;
+    //        var matchChannel = _client.GetChannelAsync(match.MatchChannelId).Result as ITextChannel;
 
-            if (matchChannel != null)
-            {
-                Log.WriteLine("Found " + nameof(matchChannel) + matchChannel.Name);
-                continue;
-            }
+    //        if (matchChannel != null)
+    //        {
+    //            Log.WriteLine("Found " + nameof(matchChannel) + matchChannel.Name);
+    //            continue;
+    //        }
 
-            Log.WriteLine(nameof(matchChannel) + " was not found!" +
-                " Expected to find a channel with match id: " + match.MatchId, LogLevel.WARNING);
+    //        Log.WriteLine(nameof(matchChannel) + " was not found!" +
+    //            " Expected to find a channel with match id: " + match.MatchId, LogLevel.WARNING);
 
-            matches.CreateAMatchChannel(match, interfaceLeague, _client);
-        }*/
+    //        matches.CreateAMatchChannel(match, interfaceLeague, _client);
+    //    }*/
 
-        return Task.CompletedTask;
-    }
+    //    return Task.CompletedTask;
+    //}
 
     private static string GetChannelNameFromOverridenString(
         string _overrideChannelName, ChannelType _channelType)
