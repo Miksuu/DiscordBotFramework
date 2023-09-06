@@ -10,8 +10,8 @@ public static class SerializationManager
 
     static Dictionary<int, string> listOfDbNames = new Dictionary<int, string>
             {
-                { 0, DiscordBotDatabase.discordDbPathWithFileName },
-                { 1, DiscordBotDatabase.dbPathWithFileName },
+                { 0, DiscordBotDatabase.discordDataDirectory },
+                { 1, DiscordBotDatabase.applicationDataDirectory },
             };
 
     public static async Task SerializeDB()
@@ -43,8 +43,8 @@ public static class SerializationManager
                             sw.Close();
                         }
 
-                        FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.discordDbPathWithFileName, "database.json");
-                        File.Replace(DiscordBotDatabase.discorDdbTempPathWithFileName, DiscordBotDatabase.discordDbPathWithFileName + ".json", null);
+                        FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.discordDataDirectory, @"\database.json");
+                        File.Replace(DiscordBotDatabase.discorDdbTempPathWithFileName, DiscordBotDatabase.discordDataDirectory + ".json", null);
                     }
                     else
                     {
@@ -56,8 +56,8 @@ public static class SerializationManager
                             sw.Close();
                         }
 
-                        FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.dbPathWithFileName, "database.json");
-                        File.Replace(DiscordBotDatabase.dbTempPathWithFileName, DiscordBotDatabase.dbPathWithFileName + ".json", null);
+                        FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.applicationDataDirectory, @"\database.json");
+                        File.Replace(DiscordBotDatabase.dbTempPathWithFileName, DiscordBotDatabase.applicationDataDirectory + ".json", null);
                     }
                 }
                 catch (Exception ex)
