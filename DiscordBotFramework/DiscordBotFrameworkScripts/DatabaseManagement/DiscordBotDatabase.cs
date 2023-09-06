@@ -34,7 +34,7 @@ public class DiscordBotDatabase
 
     // File paths for the discord database
     public static string mainAppnameDirectory = @"C:\" + appName;
-    public static string mainAppnameDataDirectory = mainAppnameDirectory + @"\Data\";
+    public static string mainAppnameDataDirectory = mainAppnameDirectory + @"\Data";
     public static string discordDataDir = mainAppnameDataDirectory + @"\DiscordBotDatabase";
     public static string discordDbPathWithFileName = discordDataDir + @"\";
 
