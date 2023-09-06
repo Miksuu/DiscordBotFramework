@@ -31,31 +31,39 @@ public static class SerializationManager
 
             foreach (var dbStringLocationKvp in listOfDbNames)
             {
-                if (dbStringLocationKvp.Key == 0)
+                try
                 {
-                    using (StreamWriter sw = new StreamWriter(DiscordBotDatabase.discorDdbTempPathWithFileName))
-                    using (JsonWriter writer = new JsonTextWriter(sw))
+                    if (dbStringLocationKvp.Key == 0)
                     {
-                        serializer.Serialize(writer, DiscordBotDatabase.Instance, typeof(DiscordBotDatabase));
-                        writer.Close();
-                        sw.Close();
-                    }
+                        using (StreamWriter sw = new StreamWriter(DiscordBotDatabase.discorDdbTempPathWithFileName))
+                        using (JsonWriter writer = new JsonTextWriter(sw))
+                        {
+                            serializer.Serialize(writer, DiscordBotDatabase.Instance, typeof(DiscordBotDatabase));
+                            writer.Close();
+                            sw.Close();
+                        }
 
-                    FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.discordDbPathWithFileName, "database.json");
-                    File.Replace(DiscordBotDatabase.discorDdbTempPathWithFileName, DiscordBotDatabase.discordDbPathWithFileName + ".json", null);
+                        FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.discordDbPathWithFileName, "database.json");
+                        File.Replace(DiscordBotDatabase.discorDdbTempPathWithFileName, DiscordBotDatabase.discordDbPathWithFileName + ".json", null);
+                    }
+                    else
+                    {
+                        using (StreamWriter sw = new StreamWriter(DiscordBotDatabase.dbTempPathWithFileName))
+                        using (JsonWriter writer = new JsonTextWriter(sw))
+                        {
+                            serializer.Serialize(writer, Database.Instance, typeof(Database));
+                            writer.Close();
+                            sw.Close();
+                        }
+
+                        FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.dbPathWithFileName, "database.json");
+                        File.Replace(DiscordBotDatabase.dbTempPathWithFileName, DiscordBotDatabase.dbPathWithFileName + ".json", null);
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    using (StreamWriter sw = new StreamWriter(DiscordBotDatabase.dbTempPathWithFileName))
-                    using (JsonWriter writer = new JsonTextWriter(sw))
-                    {
-                        serializer.Serialize(writer, Database.Instance, typeof(Database));
-                        writer.Close();
-                        sw.Close();
-                    }
-
-                    FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.dbPathWithFileName, "database.json");
-                    File.Replace(DiscordBotDatabase.dbTempPathWithFileName, DiscordBotDatabase.dbPathWithFileName + ".json", null);
+                    Log.WriteLine(ex.Message, LogLevel.ERROR);
+                    continue;
                 }
             }
         }
