@@ -25,7 +25,9 @@ public static class CategoryAndChannelManager
             {
                 Log.WriteLine("Looping on category name: " + categoryType);
 
-                if (categoryType == CategoryType.LEAGUETEMPLATE)
+                InterfaceCategory interfaceCategory = GetCategoryInstance(categoryType);
+
+                if (interfaceCategory.SkipOnRegularCategoryGeneration)
                 {
                     Log.WriteLine("skipped " + categoryType);
                     continue;

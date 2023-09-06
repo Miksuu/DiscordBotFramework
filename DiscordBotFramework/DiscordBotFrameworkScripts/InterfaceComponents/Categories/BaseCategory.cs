@@ -34,10 +34,18 @@ public abstract class BaseCategory : InterfaceCategory
         set => socketCategoryChannelId.SetValue(value);
     }
 
+    bool InterfaceCategory.SkipOnRegularCategoryGeneration
+    {
+        get => skipOnRegularCategoryGeneration.GetValue();
+        set => skipOnRegularCategoryGeneration.SetValue(value);
+    }
+
     [DataMember] protected logEnum<CategoryType> categoryType = new logEnum<CategoryType>();
     protected logConcurrentBag<ChannelType> channelTypes = new logConcurrentBag<ChannelType>();
     [DataMember] protected logConcurrentDictionary<ulong, InterfaceChannel> interfaceChannels = new logConcurrentDictionary<ulong, InterfaceChannel>();
     [DataMember] protected logVar<ulong> socketCategoryChannelId = new logVar<ulong>();
+
+    protected logVar<bool> skipOnRegularCategoryGeneration = new logVar<bool>();
 
     protected InterfaceCategory thisInterfaceCategory;
 
