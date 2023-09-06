@@ -41,7 +41,7 @@ public static class FileManager
         string _filePathWithFileName = _filePath + @"\" + _fileName;
 
         Log.WriteLine("Starting to create: " + _filePathWithFileName);
-        if (!Directory.Exists(_filePathWithFileName))
+        if (!Directory.Exists(_filePath))
         {
             Directory.CreateDirectory(_filePath);
             Log.WriteLine("Done creating: " + _filePath);
