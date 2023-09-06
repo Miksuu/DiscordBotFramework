@@ -95,7 +95,7 @@ public static class CategoryAndChannelManager
 
             Log.WriteLine("id: " + socketCategoryChannelId);
 
-            SocketRole role = await RoleManager.CheckIfRoleExistsByNameAndCreateItIfItDoesntElseReturnIt(finalCategoryName);
+            //SocketRole role = await RoleManager.CheckIfRoleExistsByNameAndCreateItIfItDoesntElseReturnIt(finalCategoryName);
 
             if (DiscordBotDatabase.Instance.Categories.FindIfInterfaceCategoryExistsWithCategoryId(socketCategoryChannelId))
             {
