@@ -100,11 +100,13 @@ public class Categories
     public void AddToCreatedCategoryWithChannelWithUlongAndInterfaceCategory(
         ulong _id, InterfaceCategory _InterfaceCategory)
     {
+        // Tempfix
+        _InterfaceCategory.SocketCategoryChannelId = _id;
+
         Log.WriteLine("Adding interfaceCategory: " + _InterfaceCategory.CategoryType +
             "to the CreatedCategoriesWithChannels ConcurrentDictionary" + " with id: " + _id);
         CreatedCategoriesWithChannels.TryAdd(_id, _InterfaceCategory);
-        Log.WriteLine("Done adding, count is now: " +
-            CreatedCategoriesWithChannels.Count);
+        Log.WriteLine("Done adding, count is now: " + CreatedCategoriesWithChannels.Count);
     }
 
     public void RemoveFromCreatedCategoryWithChannelWithKey(ulong _id)
