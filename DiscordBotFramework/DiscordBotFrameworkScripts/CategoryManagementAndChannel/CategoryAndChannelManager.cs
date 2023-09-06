@@ -31,7 +31,7 @@ public static class CategoryAndChannelManager
                     continue;
                 }
 
-                await GenerateCategoryAndItsChannels(categoryType, categoryType);
+                await GenerateCategoryAndItsChannels(categoryType);
             }
             catch (Exception ex)
             {
@@ -43,17 +43,17 @@ public static class CategoryAndChannelManager
         Log.WriteLine("Done generating RegularCategories", LogLevel.DEBUG);
     }
 
-    private static async Task GenerateCategoryAndItsChannels(CategoryType _categoryType, Enum _categoryName)
+    private static async Task GenerateCategoryAndItsChannels(CategoryType _categoryType)
     {
         try
         {
-            Log.WriteLine("Generating category named: " + _categoryType + " with enum: " + _categoryName, LogLevel.DEBUG);
+            Log.WriteLine("Generating category named: " + _categoryType + " with enum: " + _categoryType, LogLevel.DEBUG);
 
             InterfaceCategory interfaceCategory = GetCategoryInstance(_categoryType);
 
             Log.WriteLine("interfaceCategory name: " + interfaceCategory.CategoryType, LogLevel.DEBUG);
 
-            string finalCategoryName = EnumExtensions.GetEnumMemberAttrValue(_categoryName);
+            string finalCategoryName = EnumExtensions.GetEnumMemberAttrValue(_categoryType);
             Log.WriteLine("Category name is: " + finalCategoryName);
 
             ulong socketCategoryChannelId = await FindOrCreateSocketCategoryChannelAndReturnId(interfaceCategory, finalCategoryName);
@@ -69,7 +69,7 @@ public static class CategoryAndChannelManager
 
             await interfaceCategory.CreateChannelsForTheCategory(socketCategoryChannelId, role);
 
-            Log.WriteLine("Done with generating category: " + _categoryType + " with enum: " + _categoryName, LogLevel.DEBUG);
+            Log.WriteLine("Done with generating category: " + _categoryType + " with enum: " + _categoryType, LogLevel.DEBUG);
         }
         catch (Exception ex)
         {
