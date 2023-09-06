@@ -43,6 +43,7 @@ public static class SerializationManager
                             sw.Close();
                         }
 
+                        FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.discorDdbTempPathWithFileName, @"\database.tmp");
                         FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.discordDataDirectory, @"\database.json");
                         File.Replace(DiscordBotDatabase.discorDdbTempPathWithFileName, DiscordBotDatabase.discordDataDirectory + ".json", null);
                     }
@@ -56,6 +57,7 @@ public static class SerializationManager
                             sw.Close();
                         }
 
+                        FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.dbTempPathWithFileName, @"\database.tmp");
                         FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.applicationDataDirectory, @"\database.json");
                         File.Replace(DiscordBotDatabase.dbTempPathWithFileName, DiscordBotDatabase.applicationDataDirectory + ".json", null);
                     }
