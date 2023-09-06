@@ -139,10 +139,6 @@ public abstract class BaseCategory : InterfaceCategory
         Log.WriteLine("Creating channel name: " + _channelType, LogLevel.DEBUG);
 
         var guild = BotReference.GetGuildRef();
-        if (guild == null)
-        {
-            throw new InvalidOperationException(Exceptions.BotGuildRefNull());
-        }
 
         InterfaceChannel interfaceChannel = GetChannelInstance(_channelType.ToString());
 
