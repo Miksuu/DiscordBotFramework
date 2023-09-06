@@ -57,8 +57,6 @@ public static class SerializationManager
                     FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.dbPathWithFileName, "database.json");
                     File.Replace(DiscordBotDatabase.dbTempPathWithFileName, DiscordBotDatabase.dbPathWithFileName + ".json", null);
                 }
-
-
             }
         }
         catch (Exception ex)
