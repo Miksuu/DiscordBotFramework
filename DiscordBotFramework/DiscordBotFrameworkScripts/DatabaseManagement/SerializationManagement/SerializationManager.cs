@@ -1,6 +1,7 @@
 ﻿using Discord.WebSocket;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.IO;
 using System.Runtime.Serialization;
 
 public static class SerializationManager
@@ -29,10 +30,20 @@ public static class SerializationManager
             serializer.ObjectCreationHandling = ObjectCreationHandling.Replace;
             serializer.ContractResolver = new DataMemberContractResolver();
 
+            if (!Directory.Exists(DiscordBotDatabase.mainAppnameDataDirectory))
+            {
+                Directory.CreateDirectory(DiscordBotDatabase.mainAppnameDataDirectory);
+            }
+
             foreach (var dbStringLocationKvp in listOfDbNames)
             {
                 try
                 {
+                    if (!Directory.Exists(dbStringLocationKvp.Value))
+                    {
+                        Directory.CreateDirectory(dbStringLocationKvp.Value);
+                    }
+
                     if (dbStringLocationKvp.Key == 0)
                     {
                         using (StreamWriter sw = new StreamWriter(DiscordBotDatabase.discordDbTempPathWithFileName))
