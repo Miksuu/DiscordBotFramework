@@ -11,8 +11,8 @@ public static class SerializationManager
 
     static Dictionary<int, string> listOfDbNames = new Dictionary<int, string>
             {
-                { 0, DiscordBotDatabase.discordDataDirectory },
-                { 1, DiscordBotDatabase.applicationDataDirectory },
+                { 0, DatabasePaths.discordDataDirectory },
+                { 1, DatabasePaths.applicationDataDirectory },
             };
 
     public static async Task SerializeDB()
@@ -30,9 +30,9 @@ public static class SerializationManager
             serializer.ObjectCreationHandling = ObjectCreationHandling.Replace;
             serializer.ContractResolver = new DataMemberContractResolver();
 
-            if (!Directory.Exists(DiscordBotDatabase.mainAppnameDataDirectory))
+            if (!Directory.Exists(DatabasePaths.mainAppnameDataDirectory))
             {
-                Directory.CreateDirectory(DiscordBotDatabase.mainAppnameDataDirectory);
+                Directory.CreateDirectory(DatabasePaths.mainAppnameDataDirectory);
             }
 
             foreach (var dbStringLocationKvp in listOfDbNames)
@@ -46,7 +46,7 @@ public static class SerializationManager
 
                     if (dbStringLocationKvp.Key == 0)
                     {
-                        using (StreamWriter sw = new StreamWriter(DiscordBotDatabase.discordDbTempPathWithFileName))
+                        using (StreamWriter sw = new StreamWriter(DatabasePaths.discordDbTempPathWithFileName))
                         using (JsonWriter writer = new JsonTextWriter(sw))
                         {
                             serializer.Serialize(writer, DiscordBotDatabase.Instance, typeof(DiscordBotDatabase));
@@ -54,13 +54,13 @@ public static class SerializationManager
                             sw.Close();
                         }
 
-                        FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.discordDataDirectory, @"\database.tmp");
-                        FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.discordDataDirectory, @"\database.json");
-                        File.Replace(DiscordBotDatabase.discordDbTempPathWithFileName, DiscordBotDatabase.discordDataDirectory + @"\database.json", null);
+                        FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DatabasePaths.discordDataDirectory, @"\database.tmp");
+                        FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DatabasePaths.discordDataDirectory, @"\database.json");
+                        File.Replace(DatabasePaths.discordDbTempPathWithFileName, DatabasePaths.discordDataDirectory + @"\database.json", null);
                     }
                     else
                     {
-                        using (StreamWriter sw = new StreamWriter(DiscordBotDatabase.dbTempPathWithFileName))
+                        using (StreamWriter sw = new StreamWriter(DatabasePaths.dbTempPathWithFileName))
                         using (JsonWriter writer = new JsonTextWriter(sw))
                         {
                             serializer.Serialize(writer, Database.Instance, typeof(Database));
@@ -68,9 +68,9 @@ public static class SerializationManager
                             sw.Close();
                         }
 
-                        FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.applicationDataDirectory, @"\database.tmp");
-                        FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DiscordBotDatabase.applicationDataDirectory, @"\database.json");
-                        File.Replace(DiscordBotDatabase.dbTempPathWithFileName, DiscordBotDatabase.applicationDataDirectory + @"\database.json", null);
+                        FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DatabasePaths.applicationDataDirectory, @"\database.tmp");
+                        FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DatabasePaths.applicationDataDirectory, @"\database.json");
+                        File.Replace(DatabasePaths.dbTempPathWithFileName, DatabasePaths.applicationDataDirectory + @"\database.json", null);
                     }
                 }
                 catch (Exception ex)
