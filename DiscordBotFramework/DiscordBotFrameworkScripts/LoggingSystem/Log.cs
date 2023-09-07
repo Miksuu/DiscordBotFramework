@@ -62,29 +62,12 @@ public static class Log
 
     private static void WriteToFileLogFile(LogLevel _logLevel, string _logMessage, string _scriptName)
     {
-        CheckIfDirectoryExistsAndAppendToTheFile(logsPath, _logLevel.ToString(), _logMessage);
-        CheckIfDirectoryExistsAndAppendToTheFile(logsPath, "EVERYTHING", _logMessage);
+        FileManager.CheckIfDirectoryExistsAndAppendToTheFile(logsPath, _logLevel.ToString(), _logMessage);
+        FileManager.CheckIfDirectoryExistsAndAppendToTheFile(logsPath, "EVERYTHING", _logMessage);
 
         if (_scriptName == "MatchScheduler.cs")
         {
-            CheckIfDirectoryExistsAndAppendToTheFile(logsPath, _scriptName, _logMessage);
+            FileManager.CheckIfDirectoryExistsAndAppendToTheFile(logsPath, _scriptName, _logMessage);
         }
-    }
-
-
-    // Move this out of the Log.cs file
-    private static void CheckIfDirectoryExistsAndAppendToTheFile(string _directory, string _logLevel, string _content)
-    {
-        if (!Directory.Exists(_directory))
-        {
-            Directory.CreateDirectory(_directory);
-        }
-
-        string fileExtension = ".log";
-        string pathToFile = _directory + _logLevel + fileExtension;
-
-        string contentWithNewLine = Environment.NewLine + _content;
-
-        FileManager.AppendText(pathToFile, contentWithNewLine);
     }
 }

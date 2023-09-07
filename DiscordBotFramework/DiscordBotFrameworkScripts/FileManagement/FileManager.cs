@@ -18,6 +18,21 @@ public static class FileManager
         return Task.CompletedTask;
     }
 
+    public static void CheckIfDirectoryExistsAndAppendToTheFile(string _directory, string _logLevel, string _content)
+    {
+        if (!Directory.Exists(_directory))
+        {
+            Directory.CreateDirectory(_directory);
+        }
+
+        string fileExtension = ".log";
+        string pathToFile = _directory + _logLevel + fileExtension;
+
+        string contentWithNewLine = Environment.NewLine + _content;
+
+        AppendText(pathToFile, contentWithNewLine);
+    }
+
     public async static void SaveFileAttachment(SocketMessage _message, string _filePath, string _fileName)
     {
         foreach (var attachment in _message.Attachments)
