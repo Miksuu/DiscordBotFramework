@@ -64,10 +64,5 @@ public static class Log
     {
         FileManager.CheckIfDirectoryExistsAndAppendToTheFile(logsPath, _logLevel.ToString(), _logMessage);
         FileManager.CheckIfDirectoryExistsAndAppendToTheFile(logsPath, "EVERYTHING", _logMessage);
-
-        if (_scriptName == "MatchScheduler.cs")
-        {
-            FileManager.CheckIfDirectoryExistsAndAppendToTheFile(logsPath, _scriptName, _logMessage);
-        }
     }
 }
