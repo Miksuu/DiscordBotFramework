@@ -5,31 +5,8 @@ using System.Reflection;
 using System.Runtime.Serialization;
 
 [DataContract]
-public class DiscordBotDatabase
+public class DiscordBotDatabase : Singleton<DiscordBotDatabase>
 {
-    public static DiscordBotDatabase Instance
-    {
-        get
-        {
-            lock (padlock)
-            {
-                if (instance == null)
-                {
-                    instance = new DiscordBotDatabase();
-                }
-                return instance;
-            }
-        }
-        set
-        {
-            instance = value;
-        }
-    }
-
-    // Singleton stuff
-    private static DiscordBotDatabase? instance;
-    private static readonly object padlock = new object();
-
     static string appName = GetApplicationName();
 
     // File paths for the discord database
