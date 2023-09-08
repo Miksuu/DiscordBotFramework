@@ -11,10 +11,7 @@ public static class DevTools
     {
         await DeleteCategories(new List<string> { "main-category" });
         await DeleteChannels(new List<string> { "info", "test", "main-category", "development-activity" });
-
-        FileManager.DeleteDirectoryIfItExists(Log.logsPath);
-
-        await DeleteDatabases();
+        await DeleteMainFolder();
         await DeleteRoles(new List<string> { "AirCombatMatchmakerBotDev", "FrameworkTest", "Developer", "Server Booster", "DiscordBotFrameworkDev", "Discord Me", "@everyone", "@here" });
     }
 
@@ -88,37 +85,12 @@ public static class DevTools
         Log.WriteLine("Done deleting all roles", LogLevel.DEBUG);
     }
 
-    private async static Task DeleteDatabases()
+    private async static Task DeleteMainFolder()
     {
-        Log.WriteLine("Deleting database", LogLevel.DEBUG);
-        FileManager.DeleteFileIfItExists(DatabasePaths.mainAppnameDataDirectory);
-        foreach (Database db in SerializationManager.listOfDatabaseInstances)
-        {
-            Type type = db.GetType();
-            MethodInfo method = type.GetMethod("HandleDatabaseCreationOrLoading");
-            if (method != null)
-            {
-                method.Invoke(null, new object[] { "0", type });
-            }
-        }
-
-        Log.WriteLine("Done deleting database", LogLevel.DEBUG);
+        Log.WriteLine("Deleting mainfolder", LogLevel.DEBUG);
+        FileManager.DeleteDirectoryIfItExists(DatabasePaths.mainAppnameDirectory);
+        Log.WriteLine("Done deleting mainfolder", LogLevel.DEBUG);
     }
-
-
-    //private async static Task DeleteDatabases()
-    //{
-    //    Log.WriteLine("Deleting database", LogLevel.DEBUG);
-    //    FileManager.DeleteFileIfItExists(DatabasePaths.mainAppnameDataDirectory);
-    //    foreach (Database db in SerializationManager.listOfDatabaseInstances)
-    //    {
-    //        Type type = db.GetType();
-    //        db.Instance .HandleDatabaseCreationOrLoading("0", type);
-    //    }
-
-
-    //    Log.WriteLine("Done deleting database", LogLevel.DEBUG);
-    //}
 
     // !!!
     // ONLY FOR TESTING, DELETES ALL CHANNELS AND CATEGORIES

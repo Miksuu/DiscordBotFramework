@@ -15,7 +15,7 @@ public static class SerializationManager
         await semaphore.WaitAsync();
         try
         {
-            Log.WriteLine("SERIALIZING DB", LogLevel.SERIALIZATION);
+            Log.WriteLine("SERIALIZING DBs", LogLevel.SERIALIZATION);
 
             Newtonsoft.Json.JsonSerializer serializer = new Newtonsoft.Json.JsonSerializer();
             serializer.Converters.Add(new Newtonsoft.Json.Converters.JavaScriptDateTimeConverter());

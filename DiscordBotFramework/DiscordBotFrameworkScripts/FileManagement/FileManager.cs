@@ -99,36 +99,29 @@ public static class FileManager
         }
     }
 
-    public async static void DeleteDirectoryIfItExists(string _directoryPath)
+    public static void DeleteDirectoryIfItExists(string _directoryPath)
     {
-        Log.WriteLine("Deleting: " + _directoryPath + " if it exists");
-        if (!Directory.Exists(_directoryPath))
+        try
         {
-            Log.WriteLine(_directoryPath + " did not exist, returning");
-            return;
+            Log.WriteLine("Deleting directory: " + _directoryPath + " if it exists");
+            if (!Directory.Exists(_directoryPath))
+            {
+                Log.WriteLine(_directoryPath + " did not exist, returning");
+                return;
+            }
+            Log.WriteLine("Deleting: " + _directoryPath);
+
+            // True means recursive delete
+            Directory.Delete(_directoryPath, true);
+
+            Log.WriteLine("Done deleting: " + _directoryPath);
         }
-        Log.WriteLine("Deleting: " + _directoryPath);
-        Directory.Delete(_directoryPath, true);
-        Log.WriteLine("Done deleting: " + _directoryPath);
-
-
-        // Delete db here
-        //File.Delete(@"C:\DiscordBotFramework\Data\database.json");
-        //await SerializationManager.HandleDatabaseCreationOrLoading("0");
+        catch (Exception ex)
+        {
+            Log.WriteLine("An error occurred: " + ex.Message, LogLevel.ERROR);
+        }
     }
 
-    public async static void DeleteFileIfItExists(string _filePath)
-    {
-        Log.WriteLine("Deleting: " + _filePath + " if it exists");
-        if (!File.Exists(_filePath))
-        {
-            Log.WriteLine(_filePath + " did not exist, returning");
-            return;
-        }
-        Log.WriteLine("Deleting: " + _filePath);
-        File.Delete(_filePath);
-        Log.WriteLine("Done deleting: " + _filePath);
-    }
 
     public static string GetFileTypeOfAnFile(string _fileName)
     {
