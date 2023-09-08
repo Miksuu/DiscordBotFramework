@@ -72,7 +72,7 @@ public static class SerializationManager
             {
                 try
                 {
-                    dbInstance.DeserializeDatabase(dbInstance.GetType());
+                    dbInstance.DeserializeDatabase();
                 }
                 catch (Exception ex)
                 {

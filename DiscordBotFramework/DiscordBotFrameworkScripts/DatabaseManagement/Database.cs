@@ -31,7 +31,7 @@ public class Database : Singleton<Database>
         Log.WriteLine("DONE SERIALIZATION FOR " + dataDirectory, LogLevel.SERIALIZATION);
     }
 
-    public Task DeserializeDatabase(Type _type)
+    public Task DeserializeDatabase()
     {
         try
         {
@@ -41,7 +41,7 @@ public class Database : Singleton<Database>
 
             string json = File.ReadAllText(dataDirectory + @"\database.json");
 
-            HandleDatabaseCreationOrLoading(json, _type);
+            HandleDatabaseCreationOrLoading(json);
 
             Log.WriteLine("DONE DESERIALIZATION FOR " + dataDirectory, LogLevel.SERIALIZATION);
 
@@ -54,7 +54,7 @@ public class Database : Singleton<Database>
         }
     }
 
-    private static Task HandleDatabaseCreationOrLoading(string _json, Type _type)
+    private static Task HandleDatabaseCreationOrLoading(string _json)
     {
         try
         {
@@ -71,7 +71,7 @@ public class Database : Singleton<Database>
             settings.NullValueHandling = NullValueHandling.Include;
             settings.ObjectCreationHandling = ObjectCreationHandling.Replace;
 
-            var newDeserializedObject = JsonConvert.DeserializeObject(_json, _type, settings);
+            var newDeserializedObject = (Database)JsonConvert.DeserializeObject(_json, settings);
 
             if (newDeserializedObject == null)
             {
@@ -79,7 +79,7 @@ public class Database : Singleton<Database>
             }
 
             // Dynamically cast to the specified type using Convert.ChangeType
-            Instance = (Database)Convert.ChangeType(newDeserializedObject, _type);
+            Instance = (Database)newDeserializedObject;
 
             return Task.CompletedTask;
         }
