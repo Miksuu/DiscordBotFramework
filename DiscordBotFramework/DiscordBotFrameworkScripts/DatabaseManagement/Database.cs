@@ -18,7 +18,7 @@ public class Database : Singleton<Database>
             Directory.CreateDirectory(dataDirectory);
         }
 
-        using (StreamWriter sw = new StreamWriter(DatabasePaths.discordDbTempPathWithFileName))
+        using (StreamWriter sw = new StreamWriter(dbTempPathWithFileName))
         using (JsonWriter writer = new JsonTextWriter(sw))
         {
             _serializer.Serialize(writer, this, typeof(Database)); // Might need to change this to the derived class
