@@ -13,6 +13,8 @@ public class Database : Singleton<Database>
 
     public void SerializeDatabase(Newtonsoft.Json.JsonSerializer _serializer)
     {
+        Log.WriteLine("SERIALIZATION STARTING FOR " + dataDirectory, LogLevel.SERIALIZATION);
+
         if (!Directory.Exists(dataDirectory))
         {
             Directory.CreateDirectory(dataDirectory);
@@ -29,14 +31,15 @@ public class Database : Singleton<Database>
         FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(dataDirectory, @"\database.tmp");
         FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(dataDirectory, @"\database.json");
         File.Replace(dbTempPathWithFileName, dataDirectory + @"\database.json", null);
+
+        Log.WriteLine("DONE SERIALIZATION FOR " + dataDirectory, LogLevel.SERIALIZATION);
     }
 
     public Task DeserializeDatabase(Type _type)
     {
         try
         {
-            Log.WriteLine("DESERIALIZATION STARTING!", LogLevel.SERIALIZATION);
-
+            Log.WriteLine("DESERIALIZATION STARTING FOR " + dataDirectory, LogLevel.SERIALIZATION);
 
             FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(dataDirectory, "database.json");
 
@@ -44,7 +47,7 @@ public class Database : Singleton<Database>
 
             HandleDatabaseCreationOrLoading(json, _type);
 
-            Log.WriteLine("DB DESERIALIZATION DONE!", LogLevel.SERIALIZATION);
+            Log.WriteLine("DONE DESERIALIZATION FOR " + dataDirectory, LogLevel.SERIALIZATION);
 
             return Task.CompletedTask;
         }
