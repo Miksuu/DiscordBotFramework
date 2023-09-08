@@ -72,7 +72,8 @@ public static class SerializationManager
             {
                 try
                 {
-                    dbInstance.DeserializeDatabase();
+                    var type = dbInstance.GetType();
+                    dbInstance.DeserializeDatabase(type); // not valid here anymore
                 }
                 catch (Exception ex)
                 {

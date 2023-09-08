@@ -1,7 +1,3 @@
-using Discord;
-using System.Collections.Concurrent;
-using System.Net.WebSockets;
-using System.Reflection;
 using System.Runtime.Serialization;
 
 [DataContract]
@@ -12,7 +8,8 @@ public class DiscordBotDatabase : Database
 
     public static DiscordBotDatabase Instance { get { return lazy.Value; } }
 
-    DiscordBotDatabase()
+    // Make this constructor public
+    public DiscordBotDatabase()
     {
         dataDirectory = DatabasePaths.discordDataDirectory;
         dbTempPathWithFileName = dataDirectory + @"\" + "database.tmp";
