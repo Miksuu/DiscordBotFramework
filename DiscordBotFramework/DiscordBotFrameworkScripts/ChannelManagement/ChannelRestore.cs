@@ -22,7 +22,7 @@ public static class ChannelRestore
 
         // Handles deleting the old value
         var dbKeyValue =
-            DiscordBotDatabase.Instance.Categories.FindInterfaceCategoryWithCategoryId(
+            Database.GetInstance<DiscordBotDatabase>().Categories.FindInterfaceCategoryWithCategoryId(
                 _categoryId);
 
         var dbFinal = dbKeyValue.InterfaceChannels.FirstOrDefault(

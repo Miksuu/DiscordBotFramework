@@ -8,7 +8,7 @@ public static class SerializationManager
 {
     static SemaphoreSlim semaphore = new SemaphoreSlim(1);
 
-    public static List<Database> listOfDatabaseInstances = new List<Database>() { DiscordBotDatabase.Instance, ApplicationDatabase.Instance };
+    public static List<Database> listOfDatabaseInstances = new List<Database>() { Database.GetInstance<DiscordBotDatabase>(), Database.GetInstance<ApplicationDatabase>() };
     public static async Task SerializeDB()
     {
         await semaphore.WaitAsync();

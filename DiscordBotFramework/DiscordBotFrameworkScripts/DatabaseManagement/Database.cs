@@ -70,7 +70,7 @@ public abstract class Database
 
             Log.WriteLine("DONE DESERIALIZATION FOR " + dataDirectory, LogLevel.SERIALIZATION);
 
-            var discordDatabase = Database.GetInstance<DiscordBotDatabase>(); // Instance valid here
+            var discordDatabase = Database.GetInstance<DiscordBotDatabase>();
 
             return Task.CompletedTask;
         }

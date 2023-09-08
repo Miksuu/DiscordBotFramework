@@ -21,7 +21,7 @@ public static class CategoryRestore
             " not found, regenerating it...", LogLevel.DEBUG);
 
         // Delete the old entry from the database
-        //DiscordBotDatabase.Instance.Categories.RemoveFromCreatedCategoryWithChannelWithKey(
+        //Database.GetInstance<DiscordBotDatabase>().Categories.RemoveFromCreatedCategoryWithChannelWithKey(
         //    _categoryKey);
 
         return false;
