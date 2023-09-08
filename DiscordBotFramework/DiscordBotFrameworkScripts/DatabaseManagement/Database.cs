@@ -58,7 +58,7 @@ public class Database : Singleton<Database>
         }
     }
 
-    public static Task HandleDatabaseCreationOrLoading(string _json, Type _type)
+    private static Task HandleDatabaseCreationOrLoading(string _json, Type _type)
     {
         try
         {
@@ -82,7 +82,8 @@ public class Database : Singleton<Database>
                 return Task.CompletedTask;
             }
 
-            Instance = (DiscordBotDatabase)newDeserializedObject;
+            // Dynamically cast to the specified type using Convert.ChangeType
+            Instance = (Database)Convert.ChangeType(newDeserializedObject, _type);
 
             return Task.CompletedTask;
         }
@@ -92,5 +93,4 @@ public class Database : Singleton<Database>
             throw new InvalidOperationException(ex.Message);
         }
     }
-
 }
