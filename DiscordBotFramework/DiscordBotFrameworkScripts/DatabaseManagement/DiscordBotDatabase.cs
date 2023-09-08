@@ -5,9 +5,14 @@ using System.Reflection;
 using System.Runtime.Serialization;
 
 [DataContract]
-public class DiscordBotDatabase : Singleton<DiscordBotDatabase>
+public class DiscordBotDatabase : Database
 {
-    // The Database components
+    DiscordBotDatabase()
+    {
+        dataDirectory = DatabasePaths.discordDataDirectory;
+        dbTempPathWithFileName = dataDirectory + @"\" + "database.tmp";
+    }
+
     [DataMember] public Admins Admins = new Admins();
     [DataMember] public Categories Categories = new Categories();
     [DataMember] public EventScheduler EventScheduler = new EventScheduler();

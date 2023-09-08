@@ -9,12 +9,7 @@ public static class SerializationManager
 
     static SemaphoreSlim semaphore = new SemaphoreSlim(1);
 
-    static Dictionary<int, string> listOfDbNames = new Dictionary<int, string>
-            {
-                { 0, DatabasePaths.discordDataDirectory },
-                { 1, DatabasePaths.applicationDataDirectory },
-            };
-
+    static List<Database> listOfDatabaseInstances = new List<Database>();
     public static async Task SerializeDB()
     {
         await semaphore.WaitAsync();
@@ -35,43 +30,30 @@ public static class SerializationManager
                 Directory.CreateDirectory(DatabasePaths.mainAppnameDataDirectory);
             }
 
-            foreach (var dbStringLocationKvp in listOfDbNames)
+            foreach (var dbInstance in listOfDatabaseInstances)
             {
                 try
                 {
-                    if (!Directory.Exists(dbStringLocationKvp.Value))
-                    {
-                        Directory.CreateDirectory(dbStringLocationKvp.Value);
-                    }
+                    dbInstance.SerializeDatabase(serializer);
 
-                    if (dbStringLocationKvp.Key == 0)
-                    {
-                        using (StreamWriter sw = new StreamWriter(DatabasePaths.discordDbTempPathWithFileName))
-                        using (JsonWriter writer = new JsonTextWriter(sw))
-                        {
-                            serializer.Serialize(writer, DiscordBotDatabase.Instance, typeof(DiscordBotDatabase));
-                            writer.Close();
-                            sw.Close();
-                        }
+                    //if (dbStringLocationKvp.Key == 0)
+                    //{
 
-                        FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DatabasePaths.discordDataDirectory, @"\database.tmp");
-                        FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DatabasePaths.discordDataDirectory, @"\database.json");
-                        File.Replace(DatabasePaths.discordDbTempPathWithFileName, DatabasePaths.discordDataDirectory + @"\database.json", null);
-                    }
-                    else
-                    {
-                        using (StreamWriter sw = new StreamWriter(DatabasePaths.dbTempPathWithFileName))
-                        using (JsonWriter writer = new JsonTextWriter(sw))
-                        {
-                            serializer.Serialize(writer, Database.Instance, typeof(Database));
-                            writer.Close();
-                            sw.Close();
-                        }
+                    //}
+                    //else
+                    //{
+                    //    using (StreamWriter sw = new StreamWriter(DatabasePaths.dbTempPathWithFileName))
+                    //    using (JsonWriter writer = new JsonTextWriter(sw))
+                    //    {
+                    //        serializer.Serialize(writer, ApplicationDatabase.Instance, typeof(ApplicationDatabase));
+                    //        writer.Close();
+                    //        sw.Close();
+                    //    }
 
-                        FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DatabasePaths.applicationDataDirectory, @"\database.tmp");
-                        FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DatabasePaths.applicationDataDirectory, @"\database.json");
-                        File.Replace(DatabasePaths.dbTempPathWithFileName, DatabasePaths.applicationDataDirectory + @"\database.json", null);
-                    }
+                    //    FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DatabasePaths.applicationDataDirectory, @"\database.tmp");
+                    //    FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(DatabasePaths.applicationDataDirectory, @"\database.json");
+                    //    File.Replace(DatabasePaths.dbTempPathWithFileName, DatabasePaths.applicationDataDirectory + @"\database.json", null);
+                    //}
                 }
                 catch (Exception ex)
                 {
@@ -177,7 +159,7 @@ public static class SerializationManager
             if (_json == "0")
             {
                 //FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(dbPath, dbFileName);
-                Database.Instance = new();
+                ApplicationDatabase.Instance = new();
                 Log.WriteLine("json was " + _json + ", creating a new db instance", LogLevel.DEBUG);
 
                 return Task.CompletedTask;
@@ -188,14 +170,14 @@ public static class SerializationManager
             settings.NullValueHandling = NullValueHandling.Include;
             settings.ObjectCreationHandling = ObjectCreationHandling.Replace;
 
-            var newDeserializedObject = JsonConvert.DeserializeObject<Database>(_json, settings);
+            var newDeserializedObject = JsonConvert.DeserializeObject<ApplicationDatabase>(_json, settings);
 
             if (newDeserializedObject == null)
             {
                 return Task.CompletedTask;
             }
 
-            Database.Instance = newDeserializedObject;
+            ApplicationDatabase.Instance = newDeserializedObject;
 
             return Task.CompletedTask;
         }
