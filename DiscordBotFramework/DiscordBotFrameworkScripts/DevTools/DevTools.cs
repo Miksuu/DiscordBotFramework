@@ -1,4 +1,5 @@
 ﻿using Discord.WebSocket;
+using System.Reflection;
 
 public static class DevTools
 {
@@ -13,7 +14,7 @@ public static class DevTools
 
         FileManager.DeleteDirectoryIfItExists(Log.logsPath);
 
-        await DeleteDatabase();
+        await DeleteDatabases();
         await DeleteRoles(new List<string> { "AirCombatMatchmakerBotDev", "FrameworkTest", "Developer", "Server Booster", "DiscordBotFrameworkDev", "Discord Me", "@everyone", "@here" });
     }
 
@@ -87,13 +88,37 @@ public static class DevTools
         Log.WriteLine("Done deleting all roles", LogLevel.DEBUG);
     }
 
-    private async static Task DeleteDatabase()
+    private async static Task DeleteDatabases()
     {
         Log.WriteLine("Deleting database", LogLevel.DEBUG);
         FileManager.DeleteFileIfItExists(DatabasePaths.mainAppnameDataDirectory);
-        await SerializationManager.HandleDatabaseCreationOrLoading("0");
+        foreach (Database db in SerializationManager.listOfDatabaseInstances)
+        {
+            Type type = db.GetType();
+            MethodInfo method = type.GetMethod("HandleDatabaseCreationOrLoading");
+            if (method != null)
+            {
+                method.Invoke(null, new object[] { "0", type });
+            }
+        }
+
         Log.WriteLine("Done deleting database", LogLevel.DEBUG);
     }
+
+
+    //private async static Task DeleteDatabases()
+    //{
+    //    Log.WriteLine("Deleting database", LogLevel.DEBUG);
+    //    FileManager.DeleteFileIfItExists(DatabasePaths.mainAppnameDataDirectory);
+    //    foreach (Database db in SerializationManager.listOfDatabaseInstances)
+    //    {
+    //        Type type = db.GetType();
+    //        db.Instance .HandleDatabaseCreationOrLoading("0", type);
+    //    }
+
+
+    //    Log.WriteLine("Done deleting database", LogLevel.DEBUG);
+    //}
 
     // !!!
     // ONLY FOR TESTING, DELETES ALL CHANNELS AND CATEGORIES

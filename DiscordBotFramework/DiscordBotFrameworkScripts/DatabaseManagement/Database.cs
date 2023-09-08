@@ -30,4 +30,64 @@ public class Database : Singleton<Database>
         FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(dataDirectory, @"\database.json");
         File.Replace(dbTempPathWithFileName, dataDirectory + @"\database.json", null);
     }
+
+    public Task DeserializeDatabase(Type _type)
+    {
+        try
+        {
+            Log.WriteLine("DESERIALIZATION STARTING!", LogLevel.SERIALIZATION);
+
+
+            FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(dataDirectory, "database.json");
+
+            string json = File.ReadAllText(dataDirectory + @"\database.json");
+
+            HandleDatabaseCreationOrLoading(json, _type);
+
+            Log.WriteLine("DB DESERIALIZATION DONE!", LogLevel.SERIALIZATION);
+
+            return Task.CompletedTask;
+        }
+        catch (Exception ex)
+        {
+            Log.WriteLine(ex.Message, LogLevel.ERROR);
+            throw new InvalidOperationException(ex.Message);
+        }
+    }
+
+    public static Task HandleDatabaseCreationOrLoading(string _json, Type _type)
+    {
+        try
+        {
+            if (_json == "0")
+            {
+                //FileManager.CheckIfFileAndPathExistsAndCreateItIfNecessary(dbPath, dbFileName);
+                Instance = new();
+                Log.WriteLine("json was " + _json + ", creating a new db instance", LogLevel.DEBUG);
+                return Task.CompletedTask;
+            }
+
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            settings.TypeNameHandling = TypeNameHandling.Auto;
+            settings.NullValueHandling = NullValueHandling.Include;
+            settings.ObjectCreationHandling = ObjectCreationHandling.Replace;
+
+            var newDeserializedObject = JsonConvert.DeserializeObject(_json, _type, settings);
+
+            if (newDeserializedObject == null)
+            {
+                return Task.CompletedTask;
+            }
+
+            Instance = (DiscordBotDatabase)newDeserializedObject;
+
+            return Task.CompletedTask;
+        }
+        catch (Exception ex)
+        {
+            Log.WriteLine(ex.Message, LogLevel.ERROR);
+            throw new InvalidOperationException(ex.Message);
+        }
+    }
+
 }
