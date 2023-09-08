@@ -15,23 +15,23 @@ public abstract class Database
         return (T)instances[typeof(T)];
     }
 
-    public static void SetInstance(Database instance)
+    public static void SetInstance(Database _instance)
     {
-        Type type = instance.GetType();
+        Type type = _instance.GetType();
         if (instances.ContainsKey(type))
         {
-            instances[type] = instance;
+            instances[type] = _instance;
         }
         else
         {
-            instances.Add(type, instance);
+            instances.Add(type, _instance);
         }
     }
 
     public string dataDirectory = string.Empty;
     public string dbTempPathWithFileName = string.Empty;
 
-    public void SerializeDatabase(Newtonsoft.Json.JsonSerializer _serializer)
+    public void SerializeDatabase(Newtonsoft.Json.JsonSerializer _serializer, Type _type)
     {
         Log.WriteLine("SERIALIZATION STARTING FOR " + dataDirectory, LogLevel.SERIALIZATION);
 
@@ -40,10 +40,17 @@ public abstract class Database
             Directory.CreateDirectory(dataDirectory);
         }
 
+        Database specificInstance = Database.GetInstance<ApplicationDatabase>();
+
+        if (_type == typeof(DiscordBotDatabase))
+        {
+            specificInstance = Database.GetInstance<DiscordBotDatabase>();
+        }
+
         using (StreamWriter sw = new StreamWriter(dbTempPathWithFileName))
         using (JsonWriter writer = new JsonTextWriter(sw))
         {
-            _serializer.Serialize(writer, this, typeof(Database)); // Might need to change this to the derived class
+            _serializer.Serialize(writer, specificInstance, _type);  // Serialize the specific instance
             writer.Close();
             sw.Close();
         }

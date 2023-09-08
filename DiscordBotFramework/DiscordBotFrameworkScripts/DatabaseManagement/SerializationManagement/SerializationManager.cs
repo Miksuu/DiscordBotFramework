@@ -34,7 +34,7 @@ public static class SerializationManager
             {
                 try
                 {
-                    dbInstance.SerializeDatabase(serializer);
+                    dbInstance.SerializeDatabase(serializer, dbInstance.GetType());
                 }
                 catch (Exception ex)
                 {
