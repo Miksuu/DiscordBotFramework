@@ -1,8 +1,4 @@
-using Discord;
 using Newtonsoft.Json;
-using System.Collections.Concurrent;
-using System.Net.WebSockets;
-using System.Reflection;
 using System.Runtime.Serialization;
 
 [DataContract]
