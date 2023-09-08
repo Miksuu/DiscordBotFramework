@@ -28,7 +28,6 @@ public abstract class Database
         }
     }
 
-
     public string dataDirectory = string.Empty;
     public string dbTempPathWithFileName = string.Empty;
 
@@ -56,7 +55,7 @@ public abstract class Database
         Log.WriteLine("DONE SERIALIZATION FOR " + dataDirectory, LogLevel.SERIALIZATION);
     }
 
-    public Task DeserializeDatabase(Type _type)
+    public Task DeSerializeDatabase(Type _type)
     {
         try
         {
@@ -106,6 +105,7 @@ public abstract class Database
             SetInstance((Database)newDeserializedObject);
 
             //var discordDatabase = Database.GetInstance<DiscordBotDatabase>();
+            //var discordDatabas2e = Database.GetInstance<ApplicationDatabase>();
             return Task.CompletedTask;
         }
         catch (Exception ex)
