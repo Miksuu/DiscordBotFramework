@@ -1,4 +1,5 @@
 ﻿using Discord.WebSocket;
+using System.Reflection;
 
 public static class DevTools
 {
@@ -10,10 +11,7 @@ public static class DevTools
     {
         await DeleteCategories(new List<string> { "main-category" });
         await DeleteChannels(new List<string> { "info", "test", "main-category", "development-activity" });
-
-        FileManager.DeleteDirectoryIfItExists(Log.logsPath);
-
-        await DeleteDatabase();
+        await DeleteMainFolder();
         await DeleteRoles(new List<string> { "AirCombatMatchmakerBotDev", "FrameworkTest", "Developer", "Server Booster", "DiscordBotFrameworkDev", "Discord Me", "@everyone", "@here" });
     }
 
@@ -87,12 +85,11 @@ public static class DevTools
         Log.WriteLine("Done deleting all roles", LogLevel.DEBUG);
     }
 
-    private async static Task DeleteDatabase()
+    private async static Task DeleteMainFolder()
     {
-        Log.WriteLine("Deleting database", LogLevel.DEBUG);
-        FileManager.DeleteFileIfItExists(DatabasePaths.mainAppnameDataDirectory);
-        await SerializationManager.HandleDatabaseCreationOrLoading("0");
-        Log.WriteLine("Done deleting database", LogLevel.DEBUG);
+        Log.WriteLine("Deleting mainfolder", LogLevel.DEBUG);
+        FileManager.DeleteDirectoryIfItExists(DatabasePaths.mainAppnameDirectory);
+        Log.WriteLine("Done deleting mainfolder", LogLevel.DEBUG);
     }
 
     // !!!

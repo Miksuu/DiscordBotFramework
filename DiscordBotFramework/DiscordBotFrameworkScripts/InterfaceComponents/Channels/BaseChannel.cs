@@ -475,7 +475,7 @@ public abstract class BaseChannel : InterfaceChannel
                 return true;
             }
 
-            var category = DiscordBotDatabase.Instance.Categories.FindInterfaceCategoryWithCategoryId(_categoryId);
+            var category = Database.GetInstance<DiscordBotDatabase>().Categories.FindInterfaceCategoryWithCategoryId(_categoryId);
             var channel = category.FindInterfaceChannelWithIdInTheCategory(thisInterfaceChannel.ChannelId);
             category.InterfaceChannels.TryRemove(channel.ChannelId, out InterfaceChannel? _ic);
 

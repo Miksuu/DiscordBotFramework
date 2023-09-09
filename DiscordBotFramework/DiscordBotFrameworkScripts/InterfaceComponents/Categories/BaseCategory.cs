@@ -125,7 +125,7 @@ public abstract class BaseCategory : InterfaceCategory
         }
 
         // Temp fix?
-        DiscordBotDatabase.Instance.Categories.FindInterfaceCategoryWithCategoryId(_socketCategoryChannelId).InterfaceChannels = InterfaceChannels;
+        Database.GetInstance<DiscordBotDatabase>().Categories.FindInterfaceCategoryWithCategoryId(_socketCategoryChannelId).InterfaceChannels = InterfaceChannels;
     }
 
     public async Task<InterfaceChannel> CreateSpecificChannelFromChannelType(
@@ -398,8 +398,7 @@ public abstract class BaseCategory : InterfaceCategory
     {
         var guild = BotReference.GetGuildRef();
 
-        Log.WriteLine("Checking if categoryId: " + _categoryKey +
-    " has been deleted.");
+        Log.WriteLine("Checking if categoryId: " + _categoryKey + " has been deleted.");
 
         if (guild.CategoryChannels.Any(x => x.Id == _categoryKey))
         {
@@ -411,7 +410,7 @@ public abstract class BaseCategory : InterfaceCategory
             " not found, regenerating it...", LogLevel.DEBUG);
 
         // Delete the old entry from the database
-        //DiscordBotDatabase.Instance.Categories.RemoveFromCreatedCategoryWithChannelWithKey(
+        //Database.GetInstance<DiscordBotDatabase>().Categories.RemoveFromCreatedCategoryWithChannelWithKey(
         //    _categoryKey);
 
         return false;

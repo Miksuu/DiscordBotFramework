@@ -84,7 +84,7 @@ public static class RoleManager
         Log.WriteLine("Done revoking role " + _roleName + " from: " + _playerId);
     }
 
-    public static async Task<SocketRole> CheckIfRoleExistsByNameAndCreateItIfItDoesntElseReturnIt(string _roleName)
+    public static async Task<SocketRole?> CheckIfRoleExistsByNameAndCreateItIfItDoesntElseReturnIt(string _roleName)
     {
         Log.WriteLine("Checking if role exists by name: " + _roleName);
 
@@ -106,6 +106,12 @@ public static class RoleManager
         Log.WriteLine("Created a new role: " + newRole.Name + " with id: " + newRole.Id, LogLevel.DEBUG);
 
         SocketRole socketRole = guild.GetRole(newRole.Id);
+        if (socketRole == null)
+        {
+            Log.WriteLine(nameof(socketRole) + " was null (tempfix)", LogLevel.WARNING);
+            return null;
+        }
+
         Log.WriteLine("Found socketrole: " + socketRole.Name + " with id: " +
             socketRole.Id + " returning it.");
 

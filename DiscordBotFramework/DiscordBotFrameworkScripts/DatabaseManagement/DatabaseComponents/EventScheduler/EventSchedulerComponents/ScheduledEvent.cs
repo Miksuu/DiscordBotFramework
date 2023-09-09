@@ -103,7 +103,7 @@ public abstract class ScheduledEvent : InterfaceEventType
         ulong currentUnixTime = TimeService.GetCurrentUnixTime();
         TimeToExecuteTheEventOn = currentUnixTime + (ulong)_timeFromNowToExecuteOn;
         DivisibleByInterval = _divisibleByInterval;
-        EventId = ++DiscordBotDatabase.Instance.EventScheduler.EventCounter;
+        EventId = ++Database.GetInstance<DiscordBotDatabase>().EventScheduler.EventCounter;
 
         // Replace this with league of match specific ScheduledEvents list
         _scheduledEvents.Add(this);
