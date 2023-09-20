@@ -134,7 +134,8 @@ public class EventManager
     {
         try
         {
-            Log.WriteLine("Handling events with time: " + _currentUnixTime, LogLevel.DEBUG);
+            Log.WriteLine("Handling events with time: " + _currentUnixTime + " with " +
+                nameof(ClassScheduledEvents) + "'s count: " + ClassScheduledEvents.Count, LogLevel.DEBUG);
 
             foreach (ScheduledEvent scheduledEvent in ClassScheduledEvents)
             {
