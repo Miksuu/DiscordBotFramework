@@ -11,6 +11,7 @@ public interface InterfaceButton
     public ButtonStyle ButtonStyle { get; set; }
     public ulong ButtonCategoryId { get; set; }
     public string ButtonCustomId { get; set; }
+    public string CustomOperationId { get; set; }
     public bool EphemeralResponse { get; set; }
 
     public Discord.ButtonBuilder CreateTheButton(

@@ -56,6 +56,12 @@ public abstract class BaseButton : InterfaceButton
         set => buttonCustomId.SetValue(value);
     }
 
+    string InterfaceButton.CustomOperationId
+    {
+        get => customOperationId.GetValue();
+        set => customOperationId.SetValue(value);
+    }
+
     bool InterfaceButton.EphemeralResponse
     {
         get
@@ -77,6 +83,7 @@ public abstract class BaseButton : InterfaceButton
     [DataMember] protected ButtonStyle buttonStyle;
     [DataMember] protected logVar<ulong> buttonCategoryId = new logVar<ulong>();
     [DataMember] protected logString buttonCustomId = new logString();
+    [DataMember] protected logString customOperationId = new logString();
     protected bool ephemeralResponse = false;
     protected InterfaceButton thisInterfaceButton;
 
@@ -94,16 +101,7 @@ public abstract class BaseButton : InterfaceButton
             buttonStyle + " | category-id: " + _buttonCategoryId + " with buttonIndex:" +
             _buttonIndex);
 
-        //buttonIndex = _buttonIndex;
-
-        string tempCustomId = GenerateCustomButtonProperties(_buttonIndex, _channelCategoryId);
-        Log.WriteLine("tempCustomId: " + tempCustomId);
-
-        if (tempCustomId != "")
-        {
-            Log.WriteLine("Button had " + nameof(GenerateCustomButtonProperties) + " generated for it.");
-            _customId = tempCustomId;
-        }
+        GenerateCustomButtonProperties(_buttonIndex, _channelCategoryId);
 
         Log.WriteLine("_customId: " + _customId);
 
@@ -121,7 +119,7 @@ public abstract class BaseButton : InterfaceButton
         return button;
     }
 
-    protected abstract string GenerateCustomButtonProperties(int _buttonIndex, ulong _channelCategoryId);
+    protected abstract void GenerateCustomButtonProperties(int _buttonIndex, ulong _channelCategoryId);
 
     public async void CallButtonActivation(SocketMessageComponent _component, InterfaceMessage _interfaceMessage)
     {
