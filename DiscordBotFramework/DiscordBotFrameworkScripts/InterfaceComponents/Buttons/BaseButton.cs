@@ -125,8 +125,8 @@ public abstract class BaseButton : InterfaceButton
 
     public async void CallButtonActivation(SocketMessageComponent _component, InterfaceMessage _interfaceMessage)
     {
-        try
-        {
+        // try
+        // {
             var response = ActivateButtonFunction(_component, _interfaceMessage).Result;
 
             // Only serialize when the interaction was something that needs to be serialized (defined in ActivateButtonFunction())
@@ -138,23 +138,23 @@ public abstract class BaseButton : InterfaceButton
             Log.WriteLine(response.responseString + " | " + response.serialize, LogLevel.VERBOSE);
 
             await _component.RespondAsync(response.responseString, ephemeral: thisInterfaceButton.EphemeralResponse);
-        }
-        catch (NullReferenceException ex)
-        {
-            Log.WriteLine("NullReferenceException caught: " + ex.Message, LogLevel.ERROR);
-            return;
-        }
-        catch (Exception ex)
-        {
-            if (ex.Message.Contains("error 50006"))
-            {
-                Log.WriteLine("skipped empty message try-catch");
-                return;
-            }
+        // }
+        // catch (NullReferenceException ex)
+        // {
+        //     Log.WriteLine("NullReferenceException caught: " + ex.Message, LogLevel.ERROR);
+        //     return;
+        // }
+        // catch (Exception ex)
+        // {
+        //     if (ex.Message.Contains("error 50006"))
+        //     {
+        //         Log.WriteLine("skipped empty message try-catch");
+        //         return;
+        //     }
 
-            Log.WriteLine(ex.Message, LogLevel.ERROR);
-            return;
-        }
+        //     Log.WriteLine(ex.Message, LogLevel.ERROR);
+        //     return;
+        // }
     }
 
     public abstract Task<Response> ActivateButtonFunction(
