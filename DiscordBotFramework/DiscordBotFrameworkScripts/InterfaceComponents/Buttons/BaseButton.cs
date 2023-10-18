@@ -139,6 +139,11 @@ public abstract class BaseButton : InterfaceButton
 
             await _component.RespondAsync(response.responseString, ephemeral: thisInterfaceButton.EphemeralResponse);
         }
+        catch (NullReferenceException ex)
+        {
+            Log.WriteLine("NullReferenceException caught: " + ex.Message, LogLevel.ERROR);
+            return;
+        }
         catch (Exception ex)
         {
             if (ex.Message.Contains("error 50006"))
