@@ -17,8 +17,10 @@ public static class ButtonHandler
                 componentChannelId).FindInterfaceMessageWithIdInTheChannel(
                     componentMessageId);
 
-            interfaceMessage.FindButtonWithComponentDataCustomIdInTheMessage(
-                                _component.Data.CustomId).CallButtonActivation(_component, interfaceMessage);
+            var button = interfaceMessage.FindButtonWithComponentDataCustomIdInTheMessage(
+                                _component.Data.CustomId);
+
+            button.CallButtonActivation(_component, interfaceMessage);
         }
         catch (Exception ex)
         {
