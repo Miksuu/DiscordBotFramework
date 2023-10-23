@@ -101,15 +101,18 @@ public abstract class BaseCategory : InterfaceCategory
 
         Log.WriteLine(_socketCategoryChannelId.ToString(), LogLevel.DEBUG);
 
-        foreach (ChannelType channelType in thisInterfaceCategory.ChannelTypes)
-        {
-            // Checks for missing match channels from the league category
-            //if (channelType == ChannelType.MATCHCHANNEL)
-            //{
-            //    //await CreateTheMissingMatchChannels(_client, thisInterfaceCategory.SocketCategoryChannelId);
-            //    continue;
-            //}
+        ConcurrentBag<ChannelType> channelTypesToCreate = new ConcurrentBag<ChannelType>(thisInterfaceCategory.ChannelTypes);
 
+        if (thisInterfaceCategory.CategoryType == CategoryType.BOTSTUFF)
+        {
+            foreach (ChannelType additionalChannelType in AdditionalBotStuffChannels.additionalChannelTypes)
+            {
+                channelTypesToCreate.Add(additionalChannelType);
+            }
+        }
+
+        foreach (ChannelType channelType in channelTypesToCreate)
+        {
             try
             {
                 InterfaceChannel interfaceChannel =
