@@ -142,8 +142,7 @@ public class EventManager
             Log.WriteLine("Handling events with time: " + _currentUnixTime + " with " +
                 nameof(ClassScheduledEvents) + "'s count: " + ClassScheduledEvents.Count, LogLevel.DEBUG);
 
-            var additionalEvents = AdditionalEvents.GetAdditionalEvents();
-            foreach (ScheduledEvent scheduledEvent in ClassScheduledEvents.Concat(additionalEvents))
+            foreach (ScheduledEvent scheduledEvent in ClassScheduledEvents)
             {
                 // Perhaps temp, maybe move this to inside the class itself
                 try
