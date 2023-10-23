@@ -16,6 +16,11 @@ public class EventManager
 
     [DataMember] private logConcurrentBag<ScheduledEvent> classScheduledEvents = new logConcurrentBag<ScheduledEvent>();
 
+    public ConcurrentBag<ScheduledEvent> GetEvents()
+    {
+        return ClassScheduledEvents;
+    }
+
     public ulong GetTimeOfEventOfType(Type _eventType)
     {
         try
@@ -137,7 +142,8 @@ public class EventManager
             Log.WriteLine("Handling events with time: " + _currentUnixTime + " with " +
                 nameof(ClassScheduledEvents) + "'s count: " + ClassScheduledEvents.Count, LogLevel.DEBUG);
 
-            foreach (ScheduledEvent scheduledEvent in ClassScheduledEvents)
+            var additionalEvents = AdditionalEvents.GetAdditionalEvents();
+            foreach (ScheduledEvent scheduledEvent in ClassScheduledEvents.Concat(additionalEvents))
             {
                 // Perhaps temp, maybe move this to inside the class itself
                 try
@@ -178,6 +184,7 @@ public class EventManager
             throw new InvalidOperationException(ex.Message);
         }
     }
+
     public void RemoveEventFromTheScheduledEventsBag(ScheduledEvent scheduledEventToRemove)
     {
         try
@@ -227,7 +234,6 @@ public class EventManager
             throw new InvalidOperationException(ex.Message);
         }
     }
-
 
     public void ClearCertainTypeOfEventsFromTheList(Type _type)
     {
