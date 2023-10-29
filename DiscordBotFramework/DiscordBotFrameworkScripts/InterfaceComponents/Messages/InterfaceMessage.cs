@@ -23,7 +23,7 @@ public interface InterfaceMessage
     public Task<InterfaceMessage> CreateTheMessageAndItsButtonsOnTheBaseClass(
         InterfaceChannel _interfaceChannel, bool _embed,
         bool _displayMessage = true, ulong _channelCategoryId = 0,
-        SocketMessageComponent? _component = null, bool _ephemeral = true, string _finalMentionMessage = "",
+        SocketMessageComponent? _component = null, bool _ephemeral = true,
         params string[] _files);
 
     public Task<InterfaceMessage> CreateTheMessageAndItsButtonsOnTheBaseClassWithAttachmentData(
