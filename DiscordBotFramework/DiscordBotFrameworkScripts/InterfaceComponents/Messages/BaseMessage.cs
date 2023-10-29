@@ -151,7 +151,7 @@ public abstract class BaseMessage : InterfaceMessage
 
         if (!_displayMessage)
         {
-             Log.WriteLine("Created a new message with id: " + thisInterfaceMessage.MessageId + " with " + nameof(_displayMessage) + " set to false");
+            Log.WriteLine("Created a new message with id: " + thisInterfaceMessage.MessageId + " with " + nameof(_displayMessage) + " set to false");
             return this;
         }
 
