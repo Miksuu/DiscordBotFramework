@@ -116,7 +116,7 @@ public abstract class BaseMessage : InterfaceMessage
     public async Task<InterfaceMessage> CreateTheMessageAndItsButtonsOnTheBaseClass(
         InterfaceChannel _interfaceChannel, bool _embed,
         bool _displayMessage = true, ulong _channelCategoryId = 0,
-        SocketMessageComponent? _component = null, bool _ephemeral = true, string _finalMentionMessage = "",
+        SocketMessageComponent? _component = null, bool _ephemeral = true,
         params string[] _files)
     {
         thisInterfaceMessage.MessageChannelId = _interfaceChannel.ChannelId;
@@ -145,7 +145,9 @@ public abstract class BaseMessage : InterfaceMessage
         // Generates either normal buttons, or custom amount of buttons with different properties
         GenerateButtons(component, _channelCategoryId);
 
-        messageForGenerating = "\n" + GenerateMessage(_channelCategoryId).Result;
+        var messageComponents = GenerateMessage(_channelCategoryId).Result;
+
+        messageForGenerating = "\n" + messageComponents.message;
 
         if (!_displayMessage)
         {
@@ -177,7 +179,7 @@ public abstract class BaseMessage : InterfaceMessage
                 if (_files.Length == 0)
                 {
                     cachedUserMessage = await textChannel.SendMessageAsync(
-                        _finalMentionMessage, false, embed.Build(), components: componentsBuilt);
+                        messageComponents.playersToMention, false, embed.Build(), components: componentsBuilt);
 
                     thisInterfaceMessage.MessageId = cachedUserMessage.Id;
                 }
@@ -275,7 +277,7 @@ public abstract class BaseMessage : InterfaceMessage
             thisInterfaceMessage.ButtonsInTheMessage.Add(interfaceButton);
         }
 
-        messageForGenerating = "\n" + GenerateMessage().Result;
+        messageForGenerating = "\n" + GenerateMessage().Result.message;
 
         if (_displayMessage)
         {
@@ -376,7 +378,7 @@ public abstract class BaseMessage : InterfaceMessage
     public void GenerateAndModifyTheMessage(ulong _messageCategoryId = 0)
     {
         Log.WriteLine(_messageCategoryId.ToString());
-        ModifyMessage(GenerateMessage(_messageCategoryId).Result);
+        ModifyMessage(new MessageComponents(GenerateMessage(_messageCategoryId).Result.message).message);
     }
 
     protected abstract void GenerateButtons(ComponentBuilder _component, ulong _channelCategoryId);
@@ -439,7 +441,7 @@ public abstract class BaseMessage : InterfaceMessage
         Log.WriteLine("Done generating buttons");
     }
 
-    public abstract Task<string> GenerateMessage(ulong _messageCategoryId = 0);
+    public abstract Task<MessageComponents> GenerateMessage(ulong _messageCategoryId = 0);
 
     public async Task<Discord.IMessage> GetMessageById(IMessageChannel _channel)
     {

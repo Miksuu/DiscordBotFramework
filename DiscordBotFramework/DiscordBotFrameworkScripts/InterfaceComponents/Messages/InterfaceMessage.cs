@@ -23,7 +23,7 @@ public interface InterfaceMessage
     public Task<InterfaceMessage> CreateTheMessageAndItsButtonsOnTheBaseClass(
         InterfaceChannel _interfaceChannel, bool _embed,
         bool _displayMessage = true, ulong _channelCategoryId = 0,
-        SocketMessageComponent? _component = null, bool _ephemeral = true, string _finalMentionMessage = "",
+        SocketMessageComponent? _component = null, bool _ephemeral = true,
         params string[] _files);
 
     public Task<InterfaceMessage> CreateTheMessageAndItsButtonsOnTheBaseClassWithAttachmentData(
@@ -32,7 +32,7 @@ public interface InterfaceMessage
         SocketMessageComponent? _component = null, bool _ephemeral = true);
     public void ModifyMessage(string _newContent);
     public Task AddContentToTheEndOfTheMessage(string _content);
-    public abstract Task<string> GenerateMessage(ulong _messageCategoryId = 0);
+    public abstract Task<MessageComponents> GenerateMessage(ulong _messageCategoryId = 0);
     public void GenerateAndModifyTheMessage(ulong _messageCategoryId = 0);
     public Task<Discord.IMessage> GetMessageById(IMessageChannel _channel);
 

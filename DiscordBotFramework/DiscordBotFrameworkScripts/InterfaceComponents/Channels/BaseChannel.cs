@@ -164,7 +164,7 @@ public abstract class BaseChannel : InterfaceChannel
         try
         {
             var createdInterfaceMessage = await rawMessageInput.CreateTheMessageAndItsButtonsOnTheBaseClass(
-                this, true, _displayMessage, 0, _component, _ephemeral, "", _files);
+                this, true, _displayMessage, 0, _component, _ephemeral, _files);
 
             return createdInterfaceMessage.CachedUserMessage;
         }
