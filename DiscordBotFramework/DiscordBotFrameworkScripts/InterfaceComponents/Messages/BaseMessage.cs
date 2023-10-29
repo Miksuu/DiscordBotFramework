@@ -376,7 +376,7 @@ public abstract class BaseMessage : InterfaceMessage
     public void GenerateAndModifyTheMessage(ulong _messageCategoryId = 0)
     {
         Log.WriteLine(_messageCategoryId.ToString());
-        ModifyMessage(GenerateMessage(_messageCategoryId).Result);
+        ModifyMessage(new MessageComponents(GenerateMessage(_messageCategoryId).Result.message).message);
     }
 
     protected abstract void GenerateButtons(ComponentBuilder _component, ulong _channelCategoryId);
