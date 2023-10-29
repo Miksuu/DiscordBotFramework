@@ -149,70 +149,74 @@ public abstract class BaseMessage : InterfaceMessage
 
         messageForGenerating = "\n" + GenerateMessage(_channelCategoryId).Result;
 
-        if (_displayMessage)
+        if (!_displayMessage)
         {
-            var componentsBuilt = component.Build();
+             Log.WriteLine("Created a new message with id: " + thisInterfaceMessage.MessageId + " with " + nameof(_displayMessage) + " set to false");
+            return this;
+        }
 
-            // Send a regular MessageDescription
-            if (_component == null)
+        var componentsBuilt = component.Build();
+
+        // Send a regular MessageDescription
+        if (_component == null)
+        {
+            if (_embed)
             {
-                if (_embed)
-                {
-                    var embed = new EmbedBuilder();
+                var embed = new EmbedBuilder();
 
-                    // set the title, description, and color of the embedded MessageDescription
-                    embed.WithTitle(thisInterfaceMessage.MessageEmbedTitle)
-                         .WithDescription(messageForGenerating)
-                         .WithColor(messageEmbedColor)
-                         .WithFooter(GenerateMessageFooter());
+                // set the title, description, and color of the embedded MessageDescription
+                embed.WithTitle(thisInterfaceMessage.MessageEmbedTitle)
+                        .WithDescription(messageForGenerating)
+                        .WithColor(messageEmbedColor)
+                        .WithFooter(GenerateMessageFooter());
 
-                    // add a field to the embedded MessageDescription
-                    //embed.AddField("Field Name", "Field Value");
+                // add a field to the embedded MessageDescription
+                //embed.AddField("Field Name", "Field Value");
 
-                    // add a thumbnail image to the embedded MessageDescription
-                    //embed.WithThumbnailUrl("");
+                // add a thumbnail image to the embedded MessageDescription
+                //embed.WithThumbnailUrl("");
 
-                    if (_files.Length == 0)
-                    {
-                        cachedUserMessage = await textChannel.SendMessageAsync(
-                            _finalMentionMessage, false, embed.Build(), components: componentsBuilt);
-
-                        thisInterfaceMessage.MessageId = cachedUserMessage.Id;
-                    }
-                    else
-                    {
-                        var iMessageChannel = await _interfaceChannel.GetMessageChannelById();
-
-                        List<FileAttachment> attachments = new List<FileAttachment>();
-                        for (int i = 0; i < _files.Length; i++)
-                        {
-
-                            FileStream fileStream = new FileStream(_files[i], FileMode.Open, FileAccess.Read);
-
-                            string newName = "Match-" + _files[i].Split('-').Last();
-                            attachments.Add(new FileAttachment(fileStream, newName));
-                        }
-                        cachedUserMessage = await iMessageChannel.SendFilesAsync(attachments);
-                    }
-
-                    thisInterfaceMessage.MessageDescription = messageForGenerating;
-
-                    _interfaceChannel.InterfaceMessagesWithIds.TryAdd(thisInterfaceMessage.MessageId, this);
-                }
-                // NON EMBED MESSAGES ARE NOT ADDED TO THE InterfaceMessagesWithIds list!!!
-                else
+                if (_files.Length == 0)
                 {
                     cachedUserMessage = await textChannel.SendMessageAsync(
-                        thisInterfaceMessage.MessageDescription, false, components: componentsBuilt);
+                        _finalMentionMessage, false, embed.Build(), components: componentsBuilt);
+
+                    thisInterfaceMessage.MessageId = cachedUserMessage.Id;
                 }
+                else
+                {
+                    var iMessageChannel = await _interfaceChannel.GetMessageChannelById();
+
+                    List<FileAttachment> attachments = new List<FileAttachment>();
+                    for (int i = 0; i < _files.Length; i++)
+                    {
+
+                        FileStream fileStream = new FileStream(_files[i], FileMode.Open, FileAccess.Read);
+
+                        string newName = "Match-" + _files[i].Split('-').Last();
+                        attachments.Add(new FileAttachment(fileStream, newName));
+                    }
+                    cachedUserMessage = await iMessageChannel.SendFilesAsync(attachments);
+                }
+
+                thisInterfaceMessage.MessageDescription = messageForGenerating;
+
+                _interfaceChannel.InterfaceMessagesWithIds.TryAdd(thisInterfaceMessage.MessageId, this);
             }
-            // Reply to a MessageDescription
+            // NON EMBED MESSAGES ARE NOT ADDED TO THE InterfaceMessagesWithIds list!!!
             else
             {
-                await _component.RespondAsync(
-                    messageForGenerating, ephemeral: _ephemeral, components: componentsBuilt);
+                cachedUserMessage = await textChannel.SendMessageAsync(
+                    thisInterfaceMessage.MessageDescription, false, components: componentsBuilt);
             }
         }
+        // Reply to a MessageDescription
+        else
+        {
+            await _component.RespondAsync(
+                messageForGenerating, ephemeral: _ephemeral, components: componentsBuilt);
+        }
+
 
         Log.WriteLine("Created a new message with id: " + thisInterfaceMessage.MessageId);
 
