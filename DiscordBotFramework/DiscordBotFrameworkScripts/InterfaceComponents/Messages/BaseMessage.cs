@@ -118,7 +118,7 @@ public abstract class BaseMessage : InterfaceMessage
     public async Task<InterfaceMessage> CreateTheMessageAndItsButtonsOnTheBaseClass(
         InterfaceChannel _interfaceChannel, bool _embed,
         bool _displayMessage = true, ulong _channelCategoryId = 0,
-        SocketMessageComponent? _component = null, bool _ephemeral = true,
+        SocketMessageComponent? _component = null, bool _ephemeral = true, string _finalMentionMessage = "",
         params string[] _files)
     {
         thisInterfaceMessage.MessageChannelId = _interfaceChannel.ChannelId;
@@ -156,41 +156,6 @@ public abstract class BaseMessage : InterfaceMessage
             // Send a regular MessageDescription
             if (_component == null)
             {
-                string finalMentionMessage = "";
-                //if (mentionMatchPlayers || mentionOtherTeamsPlayers)
-                //{
-                //    MatchChannelComponents mcc = new MatchChannelComponents(this);
-                //    if (mcc.interfaceLeagueCached == null || mcc.leagueMatchCached == null)
-                //    {
-                //        Log.WriteLine(nameof(mcc) + " was null!", LogLevel.ERROR);
-                //        throw new InvalidOperationException(nameof(mcc) + " was null!");
-                //    }
-
-                //    if (mcc.interfaceLeagueCached == null || mcc.leagueMatchCached == null)
-                //    {
-                //        string errorMsg = nameof(mcc) + " was null!";
-                //        Log.WriteLine(errorMsg, LogLevel.ERROR);
-                //        //return null;
-                //    }
-                //    else
-                //    {
-                //        ulong[] playerIdsInTheMatch =
-                //            mcc.leagueMatchCached.GetIdsOfThePlayersInTheMatchAsArray();
-                //        foreach (ulong playerId in playerIdsInTheMatch)
-                //        {
-                //            // Skip pinging the team that doesn't need to be pinged (such as when received Schedule request)
-                //            if (mentionOtherTeamsPlayers &&
-                //                mcc.interfaceLeagueCached.LeagueData.FindActiveTeamByPlayerIdInAPredefinedLeagueByPlayerId(playerId).TeamId ==
-                //                    mcc.leagueMatchCached.ScheduleObject.TeamIdThatRequestedScheduling)
-                //            {
-                //                continue;
-                //            }
-
-                //            finalMentionMessage += "<@" + playerId.ToString() + "> ";
-                //        }
-                //    }
-                //}
-
                 if (_embed)
                 {
                     var embed = new EmbedBuilder();
@@ -210,7 +175,7 @@ public abstract class BaseMessage : InterfaceMessage
                     if (_files.Length == 0)
                     {
                         cachedUserMessage = await textChannel.SendMessageAsync(
-                            finalMentionMessage, false, embed.Build(), components: componentsBuilt);
+                            _finalMentionMessage, false, embed.Build(), components: componentsBuilt);
 
                         thisInterfaceMessage.MessageId = cachedUserMessage.Id;
                     }
