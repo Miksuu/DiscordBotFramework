@@ -145,7 +145,7 @@ public abstract class BaseMessage : InterfaceMessage
         // Generates either normal buttons, or custom amount of buttons with different properties
         GenerateButtons(component, _channelCategoryId);
 
-        messageForGenerating = "\n" + GenerateMessage(_channelCategoryId).Result;
+        messageForGenerating = "\n" + GenerateMessage(_channelCategoryId).Result.message;
 
         if (!_displayMessage)
         {
@@ -275,7 +275,7 @@ public abstract class BaseMessage : InterfaceMessage
             thisInterfaceMessage.ButtonsInTheMessage.Add(interfaceButton);
         }
 
-        messageForGenerating = "\n" + GenerateMessage().Result;
+        messageForGenerating = "\n" + GenerateMessage().Result.message;
 
         if (_displayMessage)
         {
