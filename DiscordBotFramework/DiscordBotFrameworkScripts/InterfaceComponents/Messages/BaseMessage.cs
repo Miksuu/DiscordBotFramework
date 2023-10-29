@@ -439,7 +439,7 @@ public abstract class BaseMessage : InterfaceMessage
         Log.WriteLine("Done generating buttons");
     }
 
-    public abstract Task<string> GenerateMessage(ulong _messageCategoryId = 0);
+    public abstract Task<MessageComponents> GenerateMessage(ulong _messageCategoryId = 0);
 
     public async Task<Discord.IMessage> GetMessageById(IMessageChannel _channel)
     {
