@@ -103,8 +103,6 @@ public abstract class BaseMessage : InterfaceMessage
     [DataMember] protected logVar<ulong> messageCategoryId = new logVar<ulong>();
     [DataMember] protected logConcurrentBag<InterfaceButton> buttonsInTheMessage = new logConcurrentBag<InterfaceButton>();
 
-    protected bool mentionMatchPlayers { get; set; }
-    protected bool mentionOtherTeamsPlayers { get; set; }
     protected Discord.IUserMessage cachedUserMessage { get; set; }
 
     protected InterfaceMessage thisInterfaceMessage;
