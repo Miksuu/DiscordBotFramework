@@ -12,4 +12,5 @@ public class DiscordBotDatabase : Database
     [DataMember] public Admins Admins = new Admins();
     [DataMember] public Categories Categories = new Categories();
     [DataMember] public EventScheduler EventScheduler = new EventScheduler();
+    [DataMember] public BotStateManager BotStateManager = new BotStateManager();
 }
